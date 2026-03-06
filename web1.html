@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AETHERA | NIMBUS 2026 - Beyond the Sentient</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #050505; 
+            color: white; 
+            overflow-x: hidden; 
+            cursor: none;
+        }
+        .font-serif { font-family: 'Cinzel', serif; }
+        
+        /* Advanced Star Field with Parallax Layers */
+        .star-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle var(--duration) ease-in-out infinite;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); filter: brightness(1.5); }
+        }
+        
+        /* Floating Orbs */
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            animation: float var(--float-duration) ease-in-out infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+        
+        /* Shimmer Effect for Typography */
+        .shimmer {
+            background: linear-gradient(90deg, 
+                rgba(103, 232, 249, 0.4) 0%, 
+                rgba(255, 255, 255, 1) 50%, 
+                rgba(168, 85, 247, 0.4) 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 3s linear infinite;
+        }
+        
+        @keyframes shimmer {
+            to { background-position: 200% center; }
+        }
+        
+        /* Glassmorphism Cards */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(103, 232, 249, 0.5);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(103, 232, 249, 0.2);
+        }
+        
+        /* Glowing Countdown */
+        .countdown-digit {
+            background: linear-gradient(135deg, rgba(103, 232, 249, 0.1), rgba(168, 85, 247, 0.1));
+            border: 2px solid rgba(103, 232, 249, 0.3);
+            box-shadow: 0 0 30px rgba(103, 232, 249, 0.3), inset 0 0 20px rgba(103, 232, 249, 0.1);
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 30px rgba(103, 232, 249, 0.3), inset 0 0 20px rgba(103, 232, 249, 0.1); }
+            50% { box-shadow: 0 0 50px rgba(103, 232, 249, 0.6), inset 0 0 30px rgba(103, 232, 249, 0.2); }
+        }
+        
+        /* Timeline Connector */
+        .timeline-connector {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, 
+                transparent, 
+                rgba(103, 232, 249, 0.5) 20%, 
+                rgba(168, 85, 247, 0.5) 80%, 
+                transparent);
+        }
+        
+        .timeline-node {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .timeline-node::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #67e8f9, #a855f7);
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(103, 232, 249, 0.8);
+            animation: pulse-node 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-node {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.3); }
+        }
+        
+        /* Custom Cursor */
+        .custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(103, 232, 249, 0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: all 0.1s ease;
+            mix-blend-mode: difference;
+        }
+        
+        .cursor-trail {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, rgba(103, 232, 249, 0.8), transparent);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            animation: fade-trail 0.5s ease-out forwards;
+        }
+        
+        @keyframes fade-trail {
+            to { opacity: 0; transform: scale(2); }
+        }
+        
+        /* Sacred Geometry Overlay */
+        .sacred-geometry {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0.03;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(103, 232, 249, 0.1) 50px, rgba(103, 232, 249, 0.1) 51px),
+                repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(168, 85, 247, 0.1) 50px, rgba(168, 85, 247, 0.1) 51px);
+            pointer-events: none;
+        }
+        
+        /* CTA Button Glow */
+        .cta-button {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(103, 232, 249, 0.2), rgba(168, 85, 247, 0.2));
+            border: 2px solid rgba(103, 232, 249, 0.5);
+            transition: all 0.3s ease;
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: rotate(45deg);
+            animation: sweep 3s linear infinite;
+        }
+        
+        @keyframes sweep {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+        
+        .cta-button:hover {
+            background: linear-gradient(135deg, rgba(103, 232, 249, 0.4), rgba(168, 85, 247, 0.4));
+            border-color: rgba(103, 232, 249, 1);
+            box-shadow: 0 10px 40px rgba(103, 232, 249, 0.5);
+            transform: translateY(-5px);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .timeline-connector {
+                left: 20px;
+            }
+            .timeline-node::before {
+                left: 20px;
+            }
+        }
+        
+        /* Scroll animations */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="custom-cursor" id="custom-cursor"></div>
+    
+    <!-- Parallax Star Layers -->
+    <div class="star-layer" id="star-layer-1" style="z-index: 1;"></div>
+    <div class="star-layer" id="star-layer-2" style="z-index: 2;"></div>
+    <div class="star-layer" id="star-layer-3" style="z-index: 3;"></div>
+    
+    <!-- Sacred Geometry Overlay -->
+    <div class="sacred-geometry"></div>
+    
+    <!-- Floating Orbs -->
+    <div class="glow-orb w-96 h-96 bg-cyan-400" style="top: 10%; left: -10%; opacity: 0.15; --float-duration: 20s;"></div>
+    <div class="glow-orb w-[500px] h-[500px] bg-purple-600" style="top: 50%; right: -15%; opacity: 0.12; --float-duration: 25s;"></div>
+    <div class="glow-orb w-80 h-80 bg-pink-500" style="bottom: 10%; left: 20%; opacity: 0.1; --float-duration: 22s;"></div>
+    
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full flex justify-between items-center px-6 md:px-12 py-6 backdrop-blur-md border-b border-white/10 z-50">
+        <div class="flex items-center gap-3">
+            <div class="relative group">
+                <div class="absolute inset-0 bg-cyan-400 blur-lg opacity-30 group-hover:opacity-60 transition-opacity"></div>
+                <img src="photos/1000149369.png" alt="nimbus logo" class="relative w-10 h-10 md:w-12 md:h-12 object-contain filter drop-shadow-[0_0_8px_rgba(103,232,249,0.5)]">
+            </div>
+            <div>
+                <div class="text-4xl md:text-sm text-cyan-400 tracking-[0.3em] uppercase">NIMBUS 2026</div>
+              
+            </div>
+        </div>
+        
+        <div class="hidden md:flex items-center gap-8">
+            <a href="#lore" class="text-gray-300 hover:text-cyan-400 text-sm transition-colors">The Glore</a>
+            <a href="#megastructures" class="text-gray-300 hover:text-cyan-400 text-sm transition-colors">Events</a>
+            <!-- <a href="#timeline" class="text-gray-300 hover:text-cyan-400 text-sm transition-colors">Timeline</a> -->
+            <a href="#contact" class="text-gray-300 hover:text-cyan-400 text-sm transition-colors">Contact</a>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section id="hero" class="relative min-h-screen flex flex-col items-center justify-center text-center px-4 pt-20">
+        <div class="relative z-10 space-y-8 max-w-6xl mx-auto">
+            <div class="space-y-4">
+                <h2 class="text-cyan-400 tracking-[0.6em] text-xs md:text-1xl font-semibold uppercase animate-pulse">
+                    Beyond the Sentient
+                </h2>
+                
+                <h1 class="text-6xl md:text-9xl font-serif font-black tracking-tighter shimmer">
+                    AETHERA
+                </h1>
+                
+                <h3 class="text-6xl md:text-5xl font-serif font-light text-gray-100 tracking-wide">
+                    NIMBUS 2026 • NIT Hamirpur
+                </h3>
+            </div>
+            
+            <p class="max-w-3xl mx-auto text-gray-300 text-base md:text-xl font-light leading-relaxed px-4">
+                Step into a realm where cosmic energy meets human innovation. Experience the convergence of ancient celestial wisdom and cutting-edge technology in the most ambitious technical fest ever conceived.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-6 justify-center items-center pt-8">
+                
+                <a href="#lore" class="text-cyan-400 hover:text-white transition-colors uppercase tracking-widest text-sm border-b-2 border-cyan-400/50 hover:border-white pb-1">
+                    Discover More
+                </a>
+            </div>
+        </div>
+        
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+            </svg>
+        </div>
+    </section>
+    
+    <!-- The Lore Section -->
+    <section id="lore" class="relative py-24 px-6 md:px-12 max-w-6xl mx-auto">
+        <div class="text-center mb-16 fade-in-up">
+            <h2 class="text-cyan-400 tracking-[0.3em] uppercase text-xs mb-4">The Origin</h2>
+            <h3 class="text-4xl md:text-5xl font-serif font-bold mb-8">The Glore of Aethera</h3>
+        </div>
+        
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div class="space-y-6 fade-in-up">
+                <p class="text-gray-300 text-lg leading-relaxed border-l-4 border-cyan-500 pl-6 italic">
+                    "In the vast expanse between stars, where thought transcends matter and consciousness becomes energy, there exists <span class="text-cyan-400 font-semibold">Aethera</span>."
+                </p>
+                
+                <p class="text-gray-400 leading-relaxed">
+                    Long before humanity reached for the heavens, ancient civilizations spoke of the <strong class="text-white">Fifth Element</strong>—a luminous substance that filled the cosmos, connecting all things in an infinite web of intelligence. This was Aethera: the breath of stars, the memory of galaxies, the bridge between what we know and what we have yet to discover.
+                </p>
+                
+                <p class="text-gray-400 leading-relaxed">
+                    Now, as we stand at the precipice of a new era, <strong class="text-cyan-400">NIMBUS 2026</strong> beckons you to transcend the boundaries of human thought. To touch the infinite. To merge with the cosmic consciousness that pulses through every atom, every innovation, every dream yet realized.
+                </p>
+            </div>
+            
+            <!-- <div class="glass-card rounded-2xl p-8 md:p-12 space-y-6 fade-in-up" style="animation-delay: 0.2s;">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <h4 class="text-xl font-serif font-bold">The Journey Awaits</h4>
+                </div> -->
+                
+                <!-- <ul class="space-y-4 text-gray-300">
+                    <li class="flex items-start gap-3">
+                        <span class="w-2 h-2 bg-cyan-400 rounded-full mt-2 flex-shrink-0"></span>
+                        <span><strong class="text-white">Transcend</strong> the limits of conventional thinking</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="w-2 h-2 bg-purple-400 rounded-full mt-2 flex-shrink-0"></span>
+                        <span><strong class="text-white">Explore</strong> technologies that reshape reality</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="w-2 h-2 bg-pink-400 rounded-full mt-2 flex-shrink-0"></span>
+                        <span><strong class="text-white">Connect</strong> with minds across the cosmic spectrum</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="w-2 h-2 bg-cyan-400 rounded-full mt-2 flex-shrink-0"></span>
+                        <span><strong class="text-white">Become</strong> part of the eternal innovation</span>
+                    </li>
+                </ul> -->
+            </div>
+        </div>
+    </section>
+    
+    <!-- The Megastructures (Event Categories) -->
+    <section id="megastructures" class="relative py-24 px-6 md:px-12 max-w-7xl mx-auto">
+        <div class="text-center mb-20 fade-in-up">
+            <h2 class="text-cyan-400 tracking-[0.3em] uppercase text-xs mb-4">Realms of Innovation</h2>
+            <h3 class="text-4xl md:text-5xl font-serif font-bold mb-6">The Megastructures</h3>
+            <p class="text-gray-400 max-w-2xl mx-auto">
+                Three colossal domains where brilliance converges, each a gateway to unprecedented discovery.
+            </p>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-8">
+            <!-- Quantum Realm -->
+            <div class="glass-card rounded-2xl p-8 hover:scale-105 transition-all duration-300 fade-in-up" style="animation-delay: 0.1s;">
+                <div class="mb-6">
+                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center mb-4 mx-auto">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                        </svg>
+                    </div>
+                    <h4 class="text-2xl font-serif font-bold text-center mb-2">The Quantum Realm</h4>
+                    <p class="text-cyan-400 text-center text-sm tracking-widest uppercase">Technology</p>
+                </div>
+                
+                <p class="text-gray-400 text-center mb-6 leading-relaxed">
+                    Dive into the subatomic fabric of innovation. Coding marathons, AI challenges, robotics, and quantum computing competitions await.
+                </p>
+                
+                <div class="space-y-2 text-sm text-gray-500">
+                    <div class="flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 bg-cyan-400 rounded-full"></span>
+                        <span>Machine Learning Challenges</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 bg-cyan-400 rounded-full"></span>
+                        <span>Hackathons & Code Sprints</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 bg-cyan-400 rounded-full"></span>
+                        <span>IoT & Embedded Systems</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 bg-cyan-400 rounded-full"></span>
+                        <span>Robotics Arena</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Celestial Arts -->
+            <div class="glass-card rounded-2xl p-8 hover:scale-105 transition-all duration-300 fade-in-up" style="animation-delay: 0.2s;">
+                <div class="mb-6">
+                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center mb-4 mx-auto">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path>
+                        </svg>
+                    </div>
+                    <h4 class="text-2xl font-serif font-bold text-center mb-2">Celestial Arts</h4>
+                    <p class="text-purple-400 text-center text-sm tracking-widest uppercase">Design & Creation</p>
+                </div>
+                
+                <p class="text-gray-400 text-center mb-6 leading-relaxed">
+                    Where aesthetics meet engineering. UI/UX battles, 3D modeling showcases, generative art, and immersive VR/AR experiences.
+                </p>
+                
+                <div class="space-y-2 text-sm text-gray-500">
+                    <div class="flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 bg-purple-400 rounded-full"></span>
+                        <span>UI/UX Design Challenges</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 bg-purple-400 rounded-full"></span>
+                        <span>3D Modeling & Animation</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 bg-purple-400 rounded-full"></span>
+                        <span>VR/AR Experiences</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 bg-purple-400 rounded-full"></span>
+                        <span>Digital Art Exhibitions</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Nova Workshops -->
+            <div class="glass-card rounded-2xl p-8 hover:scale-105 transition-all duration-300 fade-in-up" style="animation-delay: 0.3s;">
+                <div class="mb-6">
+                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-pink-500 to-orange-500 flex items-center justify-center mb-4 mx-auto">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                    </div>
+                    <h4 class="text-2xl font-serif font-bold text-center mb-2">Nova Workshops</h4>
+                    <p class="text-pink-400 text-center text-sm tracking-widest uppercase">Learning & Growth</p>
+                </div>
+                
+                <p class="text-gray-400 text-center mb-6 leading-relaxed">
+                    Ignite your intellect. Expert-led sessions on emerging technologies, blockchain, quantum computing, and material science innovations.
+                </p>
+                
+                <div class="space-y-2 text-sm text-gray-500">
+                    <div class="flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 bg-pink-400 rounded-full"></span>
+                        <span>Blockchain & Web3</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 bg-pink-400 rounded-full"></span>
+                        <span>Material Science Frontiers</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 bg-pink-400 rounded-full"></span>
+                        <span>Quantum Mechanics Intro</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 bg-pink-400 rounded-full"></span>
+                        <span>Entrepreneurship Insights</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- The Countdown -->
+    <section id="countdown" class="relative py-24 px-6 md:px-12 max-w-6xl mx-auto">
+        <div class="text-center mb-16 fade-in-up">
+            <h2 class="text-cyan-400 tracking-[0.3em] uppercase text-xs mb-4">The Convergence</h2>
+            <h3 class="text-4xl md:text-5xl font-serif font-bold mb-6">Counting Down to Ascension</h3>
+            <p class="text-gray-400 max-w-2xl mx-auto">
+               Prepare for transcendence.
+            </p>
+        </div>
+        
+        <div class="flex flex-wrap justify-center gap-6 md:gap-12 fade-in-up" style="animation-delay: 0.2s;">
+            <div class="countdown-digit rounded-2xl p-6 md:p-10 text-center backdrop-blur-md">
+                <div class="text-5xl md:text-7xl font-bold text-cyan-400 font-serif mb-2" id="days">00</div>
+                <div class="text-xs md:text-sm text-gray-400 uppercase tracking-widest">Days</div>
+            </div>
+            <div class="countdown-digit rounded-2xl p-6 md:p-10 text-center backdrop-blur-md">
+                <div class="text-5xl md:text-7xl font-bold text-purple-400 font-serif mb-2" id="hours">00</div>
+                <div class="text-xs md:text-sm text-gray-400 uppercase tracking-widest">Hours</div>
+            </div>
+            <div class="countdown-digit rounded-2xl p-6 md:p-10 text-center backdrop-blur-md">
+                <div class="text-5xl md:text-7xl font-bold text-pink-400 font-serif mb-2" id="minutes">00</div>
+                <div class="text-xs md:text-sm text-gray-400 uppercase tracking-widest">Minutes</div>
+            </div>
+            <div class="countdown-digit rounded-2xl p-6 md:p-10 text-center backdrop-blur-md">
+                <div class="text-5xl md:text-7xl font-bold text-cyan-400 font-serif mb-2" id="seconds">00</div>
+                <div class="text-xs md:text-sm text-gray-400 uppercase tracking-widest">Seconds</div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-12">
+            <p class="text-gray-500 text-sm">Event Date: <span class="text-cyan-400 font-semibold">10-13 April ,2026</span></p>
+        </div>
+    </section>
+    
+    <!-- Celestial Path Timeline -->
+    <!-- <section id="timeline" class="relative py-24 px-6 md:px-12 max-w-6xl mx-auto">
+        <div class="text-center mb-20 fade-in-up">
+            <h2 class="text-cyan-400 tracking-[0.3em] uppercase text-xs mb-4">The Journey</h2>
+            <h3 class="text-4xl md:text-5xl font-serif font-bold mb-6">The Celestial Path</h3>
+            <p class="text-gray-400 max-w-2xl mx-auto">
+                A three-day odyssey through the cosmos of innovation. Each day, a new dimension unfolds.
+            </p>
+        </div>
+        
+        <div class="relative">
+            <div class="timeline-connector hidden md:block"></div>
+             -->
+            <!-- Day 1 -->
+            <!-- <div class="relative mb-16 md:mb-24 timeline-node fade-in-up">
+                <div class="flex flex-col md:flex-row items-center gap-8">
+                    <div class="flex-1 md:text-right">
+                        <div class="glass-card rounded-2xl p-6 md:p-8">
+                            <h4 class="text-2xl font-serif font-bold mb-2">Day 1: Ignition</h4>
+                            <p class="text-cyan-400 text-sm tracking-widest uppercase mb-4">March 15, 2026</p>
+                            <p class="text-gray-400 leading-relaxed mb-4">
+                                The festival awakens. Opening ceremony, keynote speeches from industry luminaries, and the launch of major competitions. The Quantum Realm opens its gates.
+                            </p>
+                            <div class="flex flex-wrap gap-2 justify-start md:justify-end">
+                                <span class="px-3 py-1 bg-cyan-500/20 text-cyan-400 text-xs rounded-full">Opening Ceremony</span>
+                                <span class="px-3 py-1 bg-cyan-500/20 text-cyan-400 text-xs rounded-full">Keynotes</span>
+                                <span class="px-3 py-1 bg-cyan-500/20 text-cyan-400 text-xs rounded-full">Tech Expo</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-px h-12 md:hidden bg-gradient-to-b from-cyan-400 to-purple-400"></div>
+                    <div class="flex-1"></div>
+                </div>
+            </div> -->
+
+
+            
+            
+            <!-- Day 2 -->
+            <!-- <div class="relative mb-16 md:mb-24 timeline-node fade-in-up" style="animation-delay: 0.2s;">
+                <div class="flex flex-col md:flex-row items-center gap-8">
+                    <div class="flex-1"></div>
+                    <div class="w-px h-12 md:hidden bg-gradient-to-b from-purple-400 to-pink-400"></div>
+                    <div class="flex-1 md:text-left">
+                        <div class="glass-card rounded-2xl p-6 md:p-8">
+                            <h4 class="text-2xl font-serif font-bold mb-2">Day 2: Ascension</h4>
+                            <p class="text-purple-400 text-sm tracking-widest uppercase mb-4">March 16, 2026</p>
+                            <p class="text-gray-400 leading-relaxed mb-4">
+                                The heart of innovation beats strongest. Hackathons reach their climax, design battles intensify, and workshops illuminate new pathways. The Celestial Arts flourish.
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-purple-500/20 text-purple-400 text-xs rounded-full">Hackathon Finals</span>
+                                <span class="px-3 py-1 bg-purple-500/20 text-purple-400 text-xs rounded-full">Design Showcase</span>
+                                <span class="px-3 py-1 bg-purple-500/20 text-purple-400 text-xs rounded-full">Workshops</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+            
+            <!-- Day 3 -->
+            <!-- <div class="relative timeline-node fade-in-up" style="animation-delay: 0.4s;">
+                <div class="flex flex-col md:flex-row items-center gap-8">
+                    <div class="flex-1 md:text-right">
+                        <div class="glass-card rounded-2xl p-6 md:p-8">
+                            <h4 class="text-2xl font-serif font-bold mb-2">Day 3: Transcendence</h4>
+                            <p class="text-pink-400 text-sm tracking-widest uppercase mb-4">March 17, 2026</p>
+                            <p class="text-gray-400 leading-relaxed mb-4">
+                                The culmination. Prize distributions, cultural performances, and the grand closing ceremony. Champions are crowned, legends are born, and the cosmos remembers.
+                            </p>
+                            <div class="flex flex-wrap gap-2 justify-start md:justify-end">
+                                <span class="px-3 py-1 bg-pink-500/20 text-pink-400 text-xs rounded-full">Awards Night</span>
+                                <span class="px-3 py-1 bg-pink-500/20 text-pink-400 text-xs rounded-full">Cultural Fest</span>
+                                <span class="px-3 py-1 bg-pink-500/20 text-pink-400 text-xs rounded-full">Grand Finale</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-1"></div>
+                </div>
+            </div>
+        </div>
+    </section> -->
+    
+    <!-- Contact Section -->
+    <section id="contact" class="relative py-24 px-6 md:px-12 max-w-6xl mx-auto">
+        <div class="glass-card rounded-3xl p-8 md:p-16 text-center fade-in-up">
+            <h2 class="text-cyan-400 tracking-[0.3em] uppercase text-xs mb-4">Connect with the Cosmos</h2>
+            <h3 class="text-4xl md:text-5xl font-serif font-bold mb-6">Stay in the Loop</h3>
+            <p class="text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+                Subscribe to receive updates about NIMBUS 2026, exclusive early-bird registrations, and cosmic transmissions from the Aethera realm.
+            </p>
+            
+            <!-- <div class="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-md mx-auto mb-12">
+                <input 
+                    type="email" 
+                    placeholder="Enter your email" 
+                    class="flex-1 w-full sm:w-auto px-6 py-3 bg-white/5 border border-white/20 rounded-full text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-colors"
+                />
+                <button class="cta-button px-8 py-3 rounded-full font-semibold text-white uppercase tracking-widest text-sm">
+                    Subscribe
+                </button>
+            </div> -->
+            
+            <div class="flex justify-center gap-6">
+                <a href="#" class="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:border-cyan-400 hover:bg-cyan-400/10 transition-all group">
+                    <svg class="w-5 h-5 text-gray-400 group-hover:text-cyan-400 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                </a>
+                <a href="#" class="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:border-cyan-400 hover:bg-cyan-400/10 transition-all group">
+                    <svg class="w-5 h-5 text-gray-400 group-hover:text-cyan-400 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                    </svg>
+                </a>
+                <a href="#" class="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:border-cyan-400 hover:bg-cyan-400/10 transition-all group">
+                    <svg class="w-5 h-5 text-gray-400 group-hover:text-cyan-400 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                    </svg>
+                </a>
+                <a href="#" class="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:border-cyan-400 hover:bg-cyan-400/10 transition-all group">
+                    <svg class="w-5 h-5 text-gray-400 group-hover:text-cyan-400 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="relative py-12 px-6 text-center border-t border-white/5">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
+                <div class="flex items-center gap-3">
+                    <div class="relative group">
+                        <div class="absolute inset-0 bg-cyan-400 blur-md opacity-20 group-hover:opacity-40 transition-opacity"></div>
+                        <img src="photos/1000149369.png" alt="Team Metamorph Logo" class="relative w-10 h-10 object-contain filter drop-shadow-[0_0_8px_rgba(103,232,249,0.4)]">
+                    </div>
+                    <div class="text-left">
+                        <div class="text-xs text-cyan-400 tracking-[0.3em] uppercase">Nimbus 2026</div>
+                       
+                    </div>
+                </div>
+                
+                <div class="text-gray-500 text-sm">
+                    <p> <span class="text-cyan-400 font-semibold">Team Metamorph</span></p>
+                    <p class="mt-1">Departmental Club of Material Science & Engineering, NIT Hamirpur</p>
+                </div>
+            </div>
+            
+            <div class="text-gray-600 text-xs tracking-widest">
+                <p>&copy; 2026 NIMBUS - AETHERA. Where minds transcend matter.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Respect user preference for reduced motion
+        const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        
+        // Custom Cursor
+        const cursor = document.getElementById('custom-cursor');
+        let cursorX = 0, cursorY = 0;
+        let mouseX = 0, mouseY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+        
+        function animateCursor() {
+            const dx = mouseX - cursorX;
+            const dy = mouseY - cursorY;
+            
+            cursorX += dx * 0.2;
+            cursorY += dy * 0.2;
+            
+            cursor.style.transform = `translate(${cursorX - 10}px, ${cursorY - 10}px)`;
+            
+            // Create trail effect
+            if (!reduceMotion && Math.random() > 0.8) {
+                const trail = document.createElement('div');
+                trail.className = 'cursor-trail';
+                trail.style.left = cursorX + 'px';
+                trail.style.top = cursorY + 'px';
+                document.body.appendChild(trail);
+                
+                setTimeout(() => trail.remove(), 500);
+            }
+            
+            requestAnimationFrame(animateCursor);
+        }
+        
+        if (!reduceMotion) {
+            animateCursor();
+        } else {
+            cursor.style.display = 'none';
+        }
+        
+        // Parallax Star Layers
+        function createStarLayers() {
+            if (reduceMotion) return;
+            
+            const layers = [
+                { id: 'star-layer-1', count: 80, sizeRange: [0.5, 1.5], speed: 0.02 },
+                { id: 'star-layer-2', count: 60, sizeRange: [1, 2], speed: 0.05 },
+                { id: 'star-layer-3', count: 40, sizeRange: [1.5, 3], speed: 0.08 }
+            ];
+            
+            layers.forEach(layer => {
+                const container = document.getElementById(layer.id);
+                if (!container) return;
+                
+                for (let i = 0; i < layer.count; i++) {
+                    const star = document.createElement('div');
+                    star.className = 'star';
+                    const size = Math.random() * (layer.sizeRange[1] - layer.sizeRange[0]) + layer.sizeRange[0];
+                    star.style.width = `${size}px`;
+                    star.style.height = `${size}px`;
+                    star.style.top = `${Math.random() * 100}%`;
+                    star.style.left = `${Math.random() * 100}%`;
+                    star.style.setProperty('--duration', `${Math.random() * 3 + 2}s`);
+                    star.style.opacity = (0.2 + Math.random() * 0.8).toString();
+                    star.dataset.speed = layer.speed;
+                    container.appendChild(star);
+                }
+            });
+        }
+        
+        createStarLayers();
+        
+        // Parallax scroll effect for stars
+        if (!reduceMotion) {
+            window.addEventListener('scroll', () => {
+                const scrollY = window.pageYOffset;
+                document.querySelectorAll('.star-layer').forEach((layer, index) => {
+                    const speed = 0.02 * (index + 1);
+                    layer.style.transform = `translateY(${scrollY * speed}px)`;
+                });
+            }, { passive: true });
+        }
+        
+        // Countdown Timer
+        function updateCountdown() {
+            const eventDate = new Date('2026-04-10T00:00:00').getTime();
+            const now = new Date().getTime();
+            const distance = eventDate - now;
+            
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            document.getElementById('days').textContent = String(days).padStart(2, '0');
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+            
+            if (distance < 0) {
+                document.getElementById('days').textContent = '00';
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
+            }
+        }
+        
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+        
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+        
+        // Intersection Observer for fade-in animations
+        if (!reduceMotion) {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -100px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationPlayState = 'running';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+            
+            document.querySelectorAll('.fade-in-up').forEach(el => {
+                el.style.animationPlayState = 'paused';
+                observer.observe(el);
+            });
+        }
+        
+        // Interactive glow on AETHERA title
+        const aetherTitle = document.querySelector('#hero h1');
+        if (aetherTitle && !reduceMotion) {
+            aetherTitle.addEventListener('mousemove', (e) => {
+                const rect = aetherTitle.getBoundingClientRect();
+                const x = ((e.clientX - rect.left) / rect.width) * 100;
+                const y = ((e.clientY - rect.top) / rect.height) * 100;
+                
+                aetherTitle.style.textShadow = `
+                    ${x * 0.05}px ${y * 0.05}px 20px rgba(103, 232, 249, 0.8),
+                    ${-x * 0.05}px ${-y * 0.05}px 20px rgba(168, 85, 247, 0.8)
+                `;
+            });
+            
+            aetherTitle.addEventListener('mouseleave', () => {
+                aetherTitle.style.textShadow = '';
+            });
+        }
+    </script>
+</body>
+</html>

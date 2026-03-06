@@ -1,0 +1,1840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Metamorph | Aethera: Beyond the Sentient</title>
+         
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #000000;
+            color: #ffffff;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Animated Gradient Background - Darker Theme */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #000000 0%, #0a0015 25%, #050010 50%, #000508 75%, #000000 100%);
+            animation: gradientShift 15s ease infinite;
+            z-index: 0;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        h1, h2, h3, .heading-font {
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        /* Animated Background Canvas */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        /* 3D Rotating Canvas */
+        #atomic-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+        
+        /* Content Layer */
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* Enhanced Glassmorphism Effect - Darker Theme */
+        .glass-card {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(0, 245, 255, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(0, 245, 255, 0.2),
+                        inset 0 1px 0 0 rgba(0, 245, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Holographic Effect - Brighter */
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, 
+                transparent 30%, 
+                rgba(0, 245, 255, 0.2) 50%, 
+                transparent 70%);
+            transform: rotate(45deg);
+            animation: holographicShine 8s linear infinite;
+        }
+        
+        @keyframes holographicShine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+        
+        /* Neon Border Animation - Electric Theme */
+        .neon-border {
+            position: relative;
+            background: rgba(0, 0, 0, 0.8);
+        }
+        
+        .neon-border::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(45deg, #00f5ff, #00d4ff, #0099ff, #00f5ff, #00ffea, #00f5ff);
+            background-size: 400% 400%;
+            border-radius: inherit;
+            z-index: -1;
+            animation: neonRotate 4s linear infinite;
+            opacity: 1;
+            filter: blur(1px);
+        }
+        
+        @keyframes neonRotate {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Hexagon Clip Path */
+        .hexagon {
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        }
+        
+        /* Enhanced Glitch Effect with Chromatic Aberration - Electric Theme */
+        @keyframes glitch {
+            0% {
+                text-shadow: 4px 4px 0 #00f5ff, -4px -4px 0 #00d4ff,
+                             6px 6px 15px rgba(0, 245, 255, 0.8);
+                transform: skew(0deg);
+            }
+            10% {
+                text-shadow: -4px -4px 0 #00f5ff, 4px 4px 0 #0099ff,
+                             -6px -6px 15px rgba(0, 212, 255, 0.8);
+                transform: skew(3deg);
+            }
+            20% {
+                text-shadow: 4px -4px 0 #00ffea, -4px 4px 0 #00d4ff,
+                             6px -6px 15px rgba(0, 255, 234, 0.8);
+                transform: skew(-3deg);
+            }
+            30% {
+                text-shadow: -4px 4px 0 #00f5ff, 4px -4px 0 #0099ff,
+                             -6px 6px 15px rgba(0, 153, 255, 0.8);
+                transform: skew(0deg);
+            }
+            40% {
+                text-shadow: 4px 4px 0 #00d4ff, -4px -4px 0 #00f5ff,
+                             0 0 20px rgba(0, 245, 255, 1);
+                transform: skew(2deg);
+            }
+            100% {
+                text-shadow: 4px 4px 0 #00f5ff, -4px -4px 0 #00d4ff,
+                             6px 6px 15px rgba(0, 245, 255, 0.8);
+                transform: skew(0deg);
+            }
+        }
+        
+        .glitch-text {
+            animation: glitch 4s infinite;
+            position: relative;
+        }
+        
+        /* Holographic Glow Effect - Electric Theme */
+        @keyframes glow-pulse {
+            0%, 100% {
+                text-shadow: 0 0 15px rgba(0, 245, 255, 0.9),
+                             0 0 30px rgba(0, 212, 255, 0.7),
+                             0 0 45px rgba(0, 153, 255, 0.5),
+                             0 0 60px rgba(0, 255, 234, 0.4);
+                filter: hue-rotate(0deg);
+            }
+            33% {
+                text-shadow: 0 0 25px rgba(0, 212, 255, 1),
+                             0 0 50px rgba(0, 153, 255, 0.8),
+                             0 0 75px rgba(0, 255, 234, 0.6),
+                             0 0 100px rgba(0, 245, 255, 0.4);
+                filter: hue-rotate(20deg);
+            }
+            66% {
+                text-shadow: 0 0 20px rgba(0, 255, 234, 0.95),
+                             0 0 40px rgba(0, 245, 255, 0.75),
+                             0 0 60px rgba(0, 212, 255, 0.6),
+                             0 0 80px rgba(0, 153, 255, 0.5);
+                filter: hue-rotate(-20deg);
+            }
+        }
+        
+        .glow-text {
+            animation: glow-pulse 3s ease-in-out infinite;
+        }
+        
+        /* Gradient Text Animation - Electric Blue Theme */
+        @keyframes gradientText {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+        
+        .gradient-text {
+            
+            background: linear-gradient(90deg, #00f5ff, #00d4ff, #0099ff, #00ffea, #00f5ff);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientText 4s ease infinite;
+        }
+        
+        /* 3D Hover Effects with Perspective - Electric Glow */
+        .hover-lift {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-15px) rotateX(5deg) scale(1.03);
+            box-shadow: 0 30px 80px rgba(0, 245, 255, 0.6),
+                        0 15px 40px rgba(0, 212, 255, 0.4),
+                        inset 0 1px 0 rgba(0, 245, 255, 0.3);
+        }
+        
+        /* Floating Animation */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            33% {
+                transform: translateY(-20px) rotate(2deg);
+            }
+            66% {
+                transform: translateY(-10px) rotate(-2deg);
+            }
+        }
+        
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        /* Pulsing Glow Animation for Cards - Electric */
+        @keyframes cardPulse {
+            0%, 100% {
+                box-shadow: 0 8px 32px rgba(0, 245, 255, 0.3),
+                            inset 0 1px 0 rgba(0, 245, 255, 0.2);
+            }
+            50% {
+                box-shadow: 0 8px 32px rgba(0, 245, 255, 0.6),
+                            0 0 60px rgba(0, 245, 255, 0.5),
+                            inset 0 1px 0 rgba(0, 245, 255, 0.4);
+            }
+        }
+        
+        .pulse-glow {
+            animation: cardPulse 3s ease-in-out infinite;
+        }
+        
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Navigation - Darker */
+        nav {
+            backdrop-filter: blur(15px);
+            background: rgba(0, 0, 0, 0.95);
+            border-bottom: 1px solid rgba(0, 245, 255, 0.3);
+        }
+        
+        /* Button Styles - Electric Blue */
+        .btn-primary {
+            background: linear-gradient(135deg, #00f5ff 0%, #0099ff 100%);
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0, 245, 255, 0.4);
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #00d4ff 0%, #00f5ff 100%);
+            box-shadow: 0 10px 40px rgba(0, 245, 255, 0.7);
+            transform: translateY(-2px);
+        }
+        
+        /* Form Styles - Electric Blue */
+        input, textarea {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(0, 245, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #00f5ff;
+            background: rgba(0, 0, 0, 0.9);
+            box-shadow: 0 0 20px rgba(0, 245, 255, 0.5),
+                        inset 0 0 10px rgba(0, 245, 255, 0.1);
+        }
+        
+        /* Enhanced Animated Hexagon Grid Pattern - Electric */
+        .hex-pattern {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0.08;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(0, 245, 255, 0.5) 40px, rgba(0, 245, 255, 0.5) 41px),
+                repeating-linear-gradient(60deg, transparent, transparent 40px, rgba(0, 212, 255, 0.5) 40px, rgba(0, 212, 255, 0.5) 41px),
+                repeating-linear-gradient(-60deg, transparent, transparent 40px, rgba(0, 255, 234, 0.5) 40px, rgba(0, 255, 234, 0.5) 41px);
+            pointer-events: none;
+            animation: hexPulse 10s ease-in-out infinite;
+        }
+        
+        @keyframes hexPulse {
+            0%, 100% {
+                opacity: 0.08;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.15;
+                transform: scale(1.02);
+            }
+        }
+        
+        /* Scanning Line Effect - Brighter */
+        /* .scan-line {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 1), transparent);
+            animation: scan 4s linear infinite;
+            z-index: 3;
+            pointer-events: none;
+            box-shadow: 0 0 10px rgba(0, 245, 255, 0.8);
+        } */
+        
+        /* @keyframes scan {
+            0% {
+                top: 0%;
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                top: 100%;
+                opacity: 0;
+            }
+        }
+         */
+        /* Energy Wave Effect - Electric */
+        @keyframes energyWave {
+            0% {
+                box-shadow: 0 0 0 0 rgba(7, 33, 34, 0.9);
+            }
+            50% {
+                box-shadow: 0 0 0 25px rgba(0, 245, 255, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(0, 245, 255, 0);
+            }
+        }
+        
+        .energy-pulse {
+            animation: energyWave 2s infinite;
+        }
+        
+        /* Particle Trail Effect */
+        @keyframes particleTrail {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) scale(0);
+                opacity: 0;
+            }
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .glitch-text {
+                font-size: 2rem;
+            }
+        }
+        
+        /* Loading Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+        
+        /* Custom Scrollbar - Electric Blue */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #000000;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #00f5ff, #0099ff);
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #00ffea, #00d4ff);
+        }
+        /* Logo Flip Styles */
+.logo-flip-container {
+    width: 45px;
+    height: 45px;
+    perspective: 1000px;
+}
+
+.logo-flip-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+}
+
+/* The actual flip class triggered by JS */
+.is-flipped {
+    transform: rotateY(180deg);
+}
+
+.logo-front, .logo-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(0, 245, 255, 0.5);
+}
+
+.logo-back {
+    transform: rotateY(180deg);
+    background: rgba(0, 245, 255, 0.1);
+}
+
+/* Keep the hexagon shape for logos */
+.logo-flip-container .hexagon {
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+/* Quantum Core Animations */
+@keyframes orbit-rotate {
+    0% { transform: rotateX(45deg) rotateY(0deg); }
+    100% { transform: rotateX(45deg) rotateY(360deg); }
+}
+
+@keyframes orbit-rotate-reverse {
+    0% { transform: rotateX(-45deg) rotateY(360deg); }
+    100% { transform: rotateX(-45deg) rotateY(0deg); }
+}
+
+.quantum-ring {
+    position: absolute;
+    border: 2px solid rgba(0, 245, 255, 0.3);
+    border-radius: 50%;
+    transition: all 0.5s ease;
+}
+
+.core-pulse {
+    animation: core-breath 4s ease-in-out infinite;
+}
+
+@keyframes core-breath {
+    0%, 100% { transform: scale(1); filter: brightness(1) blur(2px); }
+    50% { transform: scale(1.1); filter: brightness(1.5) blur(5px); }
+}
+/* Swiper Pagination Style */
+.swiper-pagination-bullet {
+    background: #00f5ff !important;
+    opacity: 0.5;
+}
+
+.swiper-pagination-bullet-active {
+    background: #00f5ff !important;
+    opacity: 1;
+    box-shadow: 0 0 10px #00f5ff;
+}
+
+/* Ensure slides have equal height */
+.swiper-slide {
+    height: auto !important;
+}
+
+@keyframes scan {
+    0%, 100% { top: 0%; opacity: 0; }
+    50% { top: 50%; opacity: 1; }
+}
+
+#material-lab .neon-border::before {
+    animation: neonRotate 8s linear infinite;
+}
+
+/* Loading state for the scanner button */
+.scanning-active {
+    filter: hue-rotate(90deg);
+    pointer-events: none;
+}
+    </style>
+</head>
+<body>
+    <!-- Animated Background Canvas -->
+    <canvas id="particle-canvas"></canvas>
+    <canvas id="atomic-canvas"></canvas>
+    <div class="hex-pattern"></div>
+    <div class="scan-line"></div>
+    
+    <!-- Content Wrapper -->
+    <div class="content-wrapper">
+        <!-- Navigation -->
+      <nav class="fixed top-0 w-full z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+            
+            <div class="flex items-center gap-4 flex-shrink-0">
+                <div class="logo-flip-container group">
+                    <div class="logo-flip-inner" id="logo-flipper">
+                        <div class="logo-front glass-card hexagon flex items-center justify-center">
+                            <img src="photos/logo (1).png" alt="Logo 1" class="w-58 h-58 object-contain">
+                        </div>
+                        <div class="logo-back glass-card hexagon flex items-center justify-center">
+                            <img src="photos/1000149369.png" alt="Logo 2" class="w-58 h-58 object-contain">
+                        </div>
+                    </div>
+                </div>
+    <span class="text-2xl font-bold heading-font glow-text tracking-tighter">TEAM METAMORPH</span>
+</div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <a href="#home" class="px-3 py-2 rounded-md text-sm font-medium hover:text-cyan-400 transition">Home</a>
+                            <a href="#about" class="px-3 py-2 rounded-md text-sm font-medium hover:text-cyan-400 transition">About</a>
+                            <a href="#projects" class="px-3 py-2 rounded-md text-sm font-medium hover:text-cyan-400 transition">Projects</a>
+                            <a href="#team" class="px-3 py-2 rounded-md text-sm font-medium hover:text-cyan-400 transition">Team</a>
+                            <a href="web1.html" target="_blank"class="px-3 py-2 rounded-md text-sm font-medium hover:text-cyan-400 transition">Nimbus</a>
+                            <a href="#contact" class="px-3 py-2 rounded-md text-sm font-medium hover:text-cyan-400 transition">Contact</a>
+                        </div>
+                    </div>
+                    <button id="mobile-menu-btn" class="md:hidden">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-slate-900 bg-opacity-95">
+                    <a href="#home" class="block px-3 py-2 rounded-md text-base font-medium hover:text-cyan-400">Home</a>
+                    <a href="#about" class="block px-3 py-2 rounded-md text-base font-medium hover:text-cyan-400">About</a>
+                    <a href="#projects" class="block px-3 py-2 rounded-md text-base font-medium hover:text-cyan-400">Projects</a>
+                    <a href="#team" class="block px-3 py-2 rounded-md text-base font-medium hover:text-cyan-400">Team</a>
+                    <a href="#aethera" class="block px-3 py-2 rounded-md text-base font-medium hover:text-cyan-400">NIMBUS</a>
+                    <a href="#contact" class="block px-3 py-2 rounded-md text-base font-medium hover:text-cyan-400">Contact</a>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Hero Section -->
+       <section id="home" class="min-h-screen flex items-center justify-center pt-16 px-4">
+    <div class="text-center max-w-5xl mx-auto fade-in-up">
+        
+        <div class="mb-12 relative flex items-center justify-center h-48">
+            <div class="quantum-ring w-40 h-40" style="animation: orbit-rotate 8s linear infinite;"></div>
+            <div class="quantum-ring w-32 h-32" style="animation: orbit-rotate-reverse 5s linear infinite; border-color: rgba(0, 153, 255, 0.5);"></div>
+            
+            <div class="relative z-10 w-24 h-24 hexagon bg-black flex items-center justify-center float-animation core-pulse">
+                <div class="absolute inset-0 bg-cyan-500 opacity-20 blur-xl rounded-full"></div>
+                <i data-lucide="zap" class="w-12 h-12 text-cyan-400 relative z-20"></i>
+            </div>
+            
+            <div class="absolute w-64 h-1 border-t border-cyan-500/20 rotate-45 blur-sm"></div>
+            <div class="absolute w-64 h-1 border-t border-cyan-500/20 -rotate-45 blur-sm"></div>
+        </div>
+
+        <h1 class="text-5xl md:text-7xl font-black mb-6 heading-font">
+            <span class="gradient-text">TEAM METAMORPH </span>
+        </h1>
+      
+                </h1>
+                <p class="text-xl md:text-2xl mb-4 glow-text font-light">
+                   WHERE ECCENTRICITY PERSONIFIES ELEGANCE
+                </p>
+                <p class="text-lg md:text-xl mb-10 text-slate-300 max-w-3xl mx-auto">
+                    Pioneering the evolution of materials at NIT Hamirpur. Where atomic structures meet artificial intelligence, and matter transcends boundaries.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="#about" class="btn-primary px-8 py-4 rounded-full font-semibold text-white neon-border">
+                     Our Vision
+                    </a>
+                <a href="web1.html" target="_blank" class="glass-card px-8 py-4 rounded-full font-semibold hover:bg-white hover:bg-opacity-10 transition pulse-glow">
+    NIMBUS '26
+</a>
+                </div>
+
+                
+            </div>
+        </section>
+        
+        <!-- About Section -->
+        <section id="about" class="py-20 px-4">
+            <div class="max-w-6xl mx-auto">
+                <h2 class="text-4xl md:text-5xl font-bold mb-12 text-center heading-font">
+                    <span class="gradient-text glow-text">About Metamorph</span>
+                </h2>
+                <div class="glass-card rounded-3xl p-8 md:p-12 hover-lift ">
+                    <div class="grid md:grid-cols-2 gap-8 items-center">
+                        <div>
+                            <h3 class="text-2xl font-bold mb-4 heading-font gradient-text">
+                                The Department Club of Material Science & Engineering
+                            </h3>
+                            <p class="text-slate-300 mb-4 leading-relaxed">
+                                At NIT Hamirpur, Team Metamorph represents the forefront of material innovation. We explore the atomic realm where crystalline structures, quantum mechanics, and engineering converge to create the materials of tomorrow.
+                            </p>
+                            <p class="text-slate-300 mb-6 leading-relaxed">
+                                Our mission is to bridge theoretical material science with practical applications, fostering a community of innovators who understand that every breakthrough begins at the molecular level.
+                            </p>
+                            <div class="flex flex-wrap gap-3">
+                                <span class="glass-card px-4 py-2 rounded-full text-sm pulse-glow">Nanomaterials</span>
+                                <span class="glass-card px-4 py-2 rounded-full text-sm pulse-glow">Biomaterials</span>
+                                <span class="glass-card px-4 py-2 rounded-full text-sm pulse-glow">Smart Materials</span>
+                                <span class="glass-card px-4 py-2 rounded-full text-sm pulse-glow">Composites</span>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="glass-card p-6 rounded-2xl text-center hover-lift ">
+                                <i data-lucide="users" class="w-12 h-12 mx-auto mb-3 text-indigo-400"></i>
+                                <h4 class="text-3xl font-bold mb-2 gradient-text">200+</h4>
+                                <p class="text-slate-400 text-sm">Active Members</p>
+                            </div>
+                            <div class="glass-card p-6 rounded-2xl text-center hover-lift ">
+                             <i data-lucide="flask-conical" class="w-12 h-12 mx-auto mb-3 text-purple-400"></i>
+                                <h4 class="text-3xl font-bold mb-2 gradient-text">50+</h4>
+                                <p class="text-slate-400 text-sm">Research Projects</p>
+                            </div>
+                            <div class="glass-card p-6 rounded-2xl text-center hover-lift ">
+                                <i data-lucide="award" class="w-12 h-12 mx-auto mb-3 text-cyan-400"></i>
+                                <h4 class="text-3xl font-bold mb-2 gradient-text">15+</h4>
+                                <p class="text-slate-400 text-sm">Awards Won</p>
+                            </div>
+                            <div class="glass-card p-6 rounded-2xl text-center hover-lift ">
+                                <i data-lucide="microscope" class="w-12 h-12 mx-auto mb-3 text-pink-400"></i>
+                                <h4 class="text-3xl font-bold mb-2 gradient-text">8</h4>
+                                <p class="text-slate-400 text-sm">Lab Facilities</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Projects Section -->
+        <section id="projects" class="py-20 px-4">
+            <div class="max-w-7xl mx-auto">
+                <h2 class="text-4xl md:text-5xl font-bold mb-12 text-center heading-font">
+                    <span class="gradient-text glow-text">Innovation Showcase</span>
+                </h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Project 1 -->
+                    <div class="glass-card rounded-2xl p-6 hover-lift ">
+                        <div class="w-16 h-16 mb-4 hexagon bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center float-animation">
+                            <i data-lucide="cpu" class="w-8 h-8 text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 heading-font gradient-text">
+                            Graphene-Based Supercapacitors
+                        </h3>
+                        <p class="text-slate-300 mb-4 text-sm leading-relaxed">
+                            Developing high-performance energy storage devices using 2D materials. Our graphene supercapacitors achieve 3x higher energy density than conventional systems.
+                        </p>
+                        <div class="flex items-center text-cyan-400 text-sm font-semibold">
+                            <span>Learn More</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Project 2 -->
+                    <div class="glass-card rounded-2xl p-6 hover-lift">
+                        <div class="w-16 h-16 mb-4 hexagon bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center float-animation" style="animation-delay: 1s;">
+                            <i data-lucide="heart-pulse" class="w-8 h-8 text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 heading-font gradient-text">
+                            Biocompatible Implants
+                        </h3>
+                        <p class="text-slate-300 mb-4 text-sm leading-relaxed">
+                            Engineering titanium alloys with enhanced osseointegration properties. Creating the next generation of medical implants that seamlessly integrate with human tissue.
+                        </p>
+                        <div class="flex items-center text-cyan-400 text-sm font-semibold">
+                            <span>Learn More</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Project 3 -->
+                    <div class="glass-card rounded-2xl p-6 hover-lift ">
+                        <div class="w-16 h-16 mb-4 hexagon bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center float-animation" style="animation-delay: 2s;">
+                            <i data-lucide="leaf" class="w-8 h-8 text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 heading-font gradient-text">
+                            Self-Healing Polymers
+                        </h3>
+                        <p class="text-slate-300 mb-4 text-sm leading-relaxed">
+                            Revolutionary materials that repair themselves autonomously. Inspired by biological systems, these polymers can restore structural integrity after damage.
+                        </p>
+                        <div class="flex items-center text-cyan-400 text-sm font-semibold">
+                            <span>Learn More</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Project 4 -->
+                    <div class="glass-card rounded-2xl p-6 hover-lift ">
+                        <div class="w-16 h-16 mb-4 hexagon bg-gradient-to-br from-yellow-500 to-orange-600 flex items-center justify-center float-animation" style="animation-delay: 3s;">
+                            <i data-lucide="zap" class="w-8 h-8 text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 heading-font gradient-text">
+                            Quantum Dot LEDs
+                        </h3>
+                        <p class="text-slate-300 mb-4 text-sm leading-relaxed">
+                            Harnessing quantum confinement effects for ultra-efficient lighting. Our QD-LEDs demonstrate 95% color purity across the visible spectrum.
+                        </p>
+                        <div class="flex items-center text-cyan-400 text-sm font-semibold">
+                            <span>Learn More</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Team Section -->
+      <section id="team" class="py-20 px-4">
+    <div class="max-w-7xl mx-auto"> <h2 class="text-4xl md:text-5xl font-bold mb-16 text-center glow-text heading-font">
+            Our Leadership
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            <div class="glass-card rounded-3xl overflow-hidden hover-lift border border-white/10 flex flex-col h-full">
+                <div class="relative w-full aspect-[3/4]">
+                    <img src="photos/DEV.jpeg" alt="Faculty Advisor" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
+                </div>
+                <div class="p-8 text-center bg-slate-900/50 flex-grow">
+                    <h3 class="text-2xl font-bold mb-1 heading-font gradient-text">Dr. DEV GARG</h3>
+                    <p class="text-indigo-400 text-md font-medium">Faculty Advisor</p>
+                </div>
+            </div>
+
+            <div class="glass-card rounded-3xl overflow-hidden hover-lift border border-white/10 flex flex-col h-full">
+                <div class="relative w-full aspect-[3/4]">
+                    <img src="photos/ARJUNSIR.png" alt="Team Lead" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
+                </div>
+                <div class="p-8 text-center bg-slate-900/50 flex-grow">
+                    <h3 class="text-2xl font-bold mb-1 heading-font gradient-text">ARJUN DHANIA</h3>
+                    <p class="text-indigo-400 text-md font-medium">CLUB COORDINATOR</p>
+                </div>
+            </div>
+
+            <div class="glass-card rounded-3xl overflow-hidden hover-lift border border-white/10 flex flex-col h-full">
+                <div class="relative w-full aspect-[3/4]">
+                    <img src="photos/Aryan (23BMS007).jpg" alt="Co-Lead" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
+                </div>
+                <div class="p-8 text-center bg-slate-900/50 flex-grow">
+                    <h3 class="text-2xl font-bold mb-1 heading-font gradient-text">ARYAN</h3>
+                    <p class="text-indigo-400 text-md font-medium">CLUB COORDINATOR</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+        <!-- team members details -->
+      <section id="detailed-team" class="py-20 px-4">
+    <div class="max-w-7xl mx-auto">
+        <h2 class="text-3xl md:text-4xl font-bold mb-16 text-center heading-font">
+            <span class="gradient-text glow-text">Core Team Members</span>
+        </h2>
+        
+        <div class="swiper teamSwiper pb-52">
+            <div class="swiper-wrapper">
+                
+              
+             
+     <div class="swiper-slide h-auto">
+                    <div class="glass-card rounded-3xl p-5 hover-lift group border border-cyan-500/20 h-full">
+                        <div class="relative mb-6 overflow-hidden rounded-2xl aspect-square">
+                            <img src="photos/Tanishq Parashar (23BMS039).png" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 flex items-end justify-center pb-6 gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="#"
+                               target="_blank"  
+                                class="w-10 h-10 rounded-full bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center hover:bg-cyan-500 transition"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                                <a href="#" 
+                                target="_blank"
+                                class="w-10 h-10 rounded-full bg-blue-500/20 border border-blue-400/50 flex items-center justify-center hover:bg-blue-600 transition"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h4 class="text-xl font-bold heading-font gradient-text mb-1">Tanishq Parashar</h4>
+                            <p class="text-slate-400 text-sm uppercase">Executive Member</p>
+                        </div>
+                    </div>
+                </div>
+
+ <div class="swiper-slide h-auto">
+                    <div class="glass-card rounded-3xl p-5 hover-lift group border border-cyan-500/20 h-full">
+                        <div class="relative mb-6 overflow-hidden rounded-2xl aspect-square">
+                            <img src="photos/Sagar Baddhan (23BMS031).png" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 flex items-end justify-center pb-6 gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="#"
+                               target="_blank"  
+                                class="w-10 h-10 rounded-full bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center hover:bg-cyan-500 transition"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                                <a href="#" 
+                                target="_blank"
+                                class="w-10 h-10 rounded-full bg-blue-500/20 border border-blue-400/50 flex items-center justify-center hover:bg-blue-600 transition"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h4 class="text-xl font-bold heading-font gradient-text mb-1">Sagar Baddhan</h4>
+                            <p class="text-slate-400 text-sm uppercase">Executive Member</p>
+                        </div>
+                    </div>
+                </div>
+
+               
+
+
+
+          
+
+
+
+                   <div class="swiper-slide h-auto">
+                    <div class="glass-card rounded-3xl p-5 hover-lift group border border-cyan-500/20 h-full">
+                        <div class="relative mb-6 overflow-hidden rounded-2xl aspect-square">
+                            <img src="photos/DEV.jpeg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 flex items-end justify-center pb-6 gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="https://www.instagram.com/agarwal_devg/"
+                               target="_blank"  
+                                class="w-10 h-10 rounded-full bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center hover:bg-cyan-500 transition"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                                <a href="https://www.linkedin.com/in/dev-garg-dvop01/" 
+                                target="_blank"
+                                class="w-10 h-10 rounded-full bg-blue-500/20 border border-blue-400/50 flex items-center justify-center hover:bg-blue-600 transition"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h4 class="text-2xl font-bold heading-font gradient-text mb-1">DEV GARG</h4>
+                            <p class="text-slate-400 text-sm uppercase">MEMBER</p>
+                        </div>
+                    </div>
+                </div>
+
+ 
+    <div class="swiper-slide h-auto">
+                    <div class="glass-card rounded-3xl p-5 hover-lift group border border-cyan-500/20 h-full">
+                        <div class="relative mb-6 overflow-hidden rounded-2xl aspect-square">
+                            <img src="photos/Sareha (23BMS034).jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 flex items-end justify-center pb-6 gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="#"
+                               target="_blank"  
+                                class="w-10 h-10 rounded-full bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center hover:bg-cyan-500 transition"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                                <a href="#" 
+                                target="_blank"
+                                class="w-10 h-10 rounded-full bg-blue-500/20 border border-blue-400/50 flex items-center justify-center hover:bg-blue-600 transition"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h4 class="text-xl font-bold heading-font gradient-text mb-1">Sareha</h4>
+                            <p class="text-slate-400 text-sm uppercase">Executive Member</p>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                      <div class="swiper-slide h-auto">
+                    <div class="glass-card rounded-3xl p-5 hover-lift group border border-cyan-500/20 h-full">
+                        <div class="relative mb-6 overflow-hidden rounded-2xl aspect-square">
+                            <img src="photos/Ayush Verma (23BMS009).png" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 flex items-end justify-center pb-6 gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="#"
+                               target="_blank"  
+                                class="w-10 h-10 rounded-full bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center hover:bg-cyan-500 transition"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                                <a href="#" 
+                                target="_blank"
+                                class="w-10 h-10 rounded-full bg-blue-500/20 border border-blue-400/50 flex items-center justify-center hover:bg-blue-600 transition"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h4 class="text-xl font-bold heading-font gradient-text mb-1">Ayush Verma</h4>
+                            <p class="text-slate-400 text-sm uppercase">Executive Member</p>
+                        </div>
+                    </div>
+                </div>
+
+
+     <div class="swiper-slide h-auto">
+                    <div class="glass-card rounded-3xl p-5 hover-lift group border border-cyan-500/20 h-full">
+                        <div class="relative mb-6 overflow-hidden rounded-2xl aspect-square">
+                            <img src="photos/Aabha Acharya (24BMS001).jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 flex items-end justify-center pb-6 gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="#" class="w-10 h-10 rounded-full bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center hover:bg-cyan-500 transition"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-blue-500/20 border border-blue-400/50 flex items-center justify-center hover:bg-blue-600 transition"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h4 class="text-xl font-bold heading-font gradient-text mb-1">Aabha Acharya</h4>
+                            <p class="text-slate-400 text-sm uppercase">MEMBER</p>
+                        </div>
+                    </div>
+                </div>
+
+
+                     <div class="swiper-slide h-auto">
+                    <div class="glass-card rounded-3xl p-5 hover-lift group border border-cyan-500/20 h-full">
+                        <div class="relative mb-6 overflow-hidden rounded-2xl aspect-square">
+                            <img src="photos/Himanshu Meena (24BMS008).jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 flex items-end justify-center pb-6 gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="#" class="w-10 h-10 rounded-full bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center hover:bg-cyan-500 transition"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-blue-500/20 border border-blue-400/50 flex items-center justify-center hover:bg-blue-600 transition"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h4 class="text-xl font-bold heading-font gradient-text mb-1">Himanshu Meena</h4>
+                            <p class="text-slate-400 text-sm uppercase">MEMBER</p>
+                        </div>
+                    </div>
+                </div>
+
+
+     <div class="swiper-slide h-auto">
+                    <div class="glass-card rounded-3xl p-5 hover-lift group border border-cyan-500/20 h-full">
+                        <div class="relative mb-6 overflow-hidden rounded-2xl aspect-square">
+                            <img src="photos/Kishan (24BMS031).png" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 flex items-end justify-center pb-6 gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="#" class="w-10 h-10 rounded-full bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center hover:bg-cyan-500 transition"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-blue-500/20 border border-blue-400/50 flex items-center justify-center hover:bg-blue-600 transition"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h4 class="text-xl font-bold heading-font gradient-text mb-1">Kishan</h4>
+                            <p class="text-slate-400 text-sm uppercase">MEMBER</p>
+                        </div>
+                    </div>
+                </div>
+
+                     <div class="swiper-slide h-auto">
+                    <div class="glass-card rounded-3xl p-5 hover-lift group border border-cyan-500/20 h-full">
+                        <div class="relative mb-6 overflow-hidden rounded-2xl aspect-square">
+                            <img src="photos/Prakriti Negi (24BMS016).jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 flex items-end justify-center pb-6 gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="#" class="w-10 h-10 rounded-full bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center hover:bg-cyan-500 transition"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-blue-500/20 border border-blue-400/50 flex items-center justify-center hover:bg-blue-600 transition"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h4 class="text-xl font-bold heading-font gradient-text mb-1">Prakriti Negi</h4>
+                            <p class="text-slate-400 text-sm uppercase">MEMBER</p>
+                        </div>
+                    </div>
+                </div>
+
+     <div class="swiper-slide h-auto">
+                    <div class="glass-card rounded-3xl p-5 hover-lift group border border-cyan-500/20 h-full">
+                        <div class="relative mb-6 overflow-hidden rounded-2xl aspect-square">
+                            <img src="photos/Purva (24bms018).png" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 flex items-end justify-center pb-6 gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="#" class="w-10 h-10 rounded-full bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center hover:bg-cyan-500 transition"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-blue-500/20 border border-blue-400/50 flex items-center justify-center hover:bg-blue-600 transition"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h4 class="text-xl font-bold heading-font gradient-text mb-1">Purva</h4>
+                            <p class="text-slate-400 text-sm uppercase">MEMBER</p>
+                        </div>
+                    </div>
+                </div>
+
+
+                     <div class="swiper-slide h-auto">
+                    <div class="glass-card rounded-3xl p-5 hover-lift group border border-cyan-500/20 h-full">
+                        <div class="relative mb-6 overflow-hidden rounded-2xl aspect-square">
+                            <img src="photos/Sanskar (24BMS020).png" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 flex items-end justify-center pb-6 gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="#" class="w-10 h-10 rounded-full bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center hover:bg-cyan-500 transition"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-blue-500/20 border border-blue-400/50 flex items-center justify-center hover:bg-blue-600 transition"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h4 class="text-xl font-bold heading-font gradient-text mb-1">Sanskar</h4>
+                            <p class="text-slate-400 text-sm uppercase">MEMBER</p>
+                        </div>
+                    </div>
+                </div>
+
+
+                     <div class="swiper-slide h-auto">
+                    <div class="glass-card rounded-3xl p-5 hover-lift group border border-cyan-500/20 h-full">
+                        <div class="relative mb-6 overflow-hidden rounded-2xl aspect-square">
+                            <img src="photos/Shubham Yadav(24BMS036).jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 flex items-end justify-center pb-6 gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="#" class="w-10 h-10 rounded-full bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center hover:bg-cyan-500 transition"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-blue-500/20 border border-blue-400/50 flex items-center justify-center hover:bg-blue-600 transition"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h4 class="text-xl font-bold heading-font gradient-text mb-1">Shubham Yadav</h4>
+                            <p class="text-slate-400 text-sm uppercase">MEMBER</p>
+                        </div>
+                    </div>
+                </div>
+
+
+                     <div class="swiper-slide h-auto">
+                    <div class="glass-card rounded-3xl p-5 hover-lift group border border-cyan-500/20 h-full">
+                        <div class="relative mb-6 overflow-hidden rounded-2xl aspect-square">
+                            <img src="photos/Umang Gautam(24BMS037).png" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 flex items-end justify-center pb-6 gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="#" class="w-10 h-10 rounded-full bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center hover:bg-cyan-500 transition"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-blue-500/20 border border-blue-400/50 flex items-center justify-center hover:bg-blue-600 transition"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h4 class="text-xl font-bold heading-font gradient-text mb-1">Umang Gautam</h4>
+                            <p class="text-slate-400 text-sm uppercase">MEMBER</p>
+                        </div>
+                    </div>
+                </div>
+
+
+                     <div class="swiper-slide h-auto">
+                    <div class="glass-card rounded-3xl p-5 hover-lift group border border-cyan-500/20 h-full">
+                        <div class="relative mb-6 overflow-hidden rounded-2xl aspect-square">
+                            <img src="photos/Vinay Sharma (24BMS024).png" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 flex items-end justify-center pb-6 gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="#" class="w-10 h-10 rounded-full bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center hover:bg-cyan-500 transition"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-blue-500/20 border border-blue-400/50 flex items-center justify-center hover:bg-blue-600 transition"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h4 class="text-xl font-bold heading-font gradient-text mb-1">Vinay Sharma </h4>
+                            <p class="text-slate-400 text-sm uppercase">MEMBER</p>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+                    <div class="swiper-slide h-auto">
+                    <div class="glass-card rounded-3xl p-5 hover-lift group border border-cyan-500/20 h-full">
+                        <div class="relative mb-6 overflow-hidden rounded-2xl aspect-square">
+                            <img src="photos/shivani.jpeg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 flex items-end justify-center pb-6 gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="#" class="w-10 h-10 rounded-full bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center hover:bg-cyan-500 transition"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-blue-500/20 border border-blue-400/50 flex items-center justify-center hover:bg-blue-600 transition"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h4 class="text-xl font-bold heading-font gradient-text mb-1">SHIVANI KAUSHAL</h4>
+                            <p class="text-slate-400 text-sm uppercase">MEMBER</p>
+                        </div>
+                    </div>
+                </div>
+
+
+     <div class="swiper-slide h-auto">
+                    <div class="glass-card rounded-3xl p-5 hover-lift group border border-cyan-500/20 h-full">
+                        <div class="relative mb-6 overflow-hidden rounded-2xl aspect-square">
+                            <img src="photos/Screenshot 2026-02-16 at 11.32.29 PM.png" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 flex items-end justify-center pb-6 gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="#" class="w-10 h-10 rounded-full bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center hover:bg-cyan-500 transition"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-blue-500/20 border border-blue-400/50 flex items-center justify-center hover:bg-blue-600 transition"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h4 class="text-xl font-bold heading-font gradient-text mb-1">Mohit</h4>
+                            <p class="text-slate-400 text-sm uppercase">VOLUNTEER</p>
+                        </div>
+                    </div>
+                </div>
+
+                     <div class="swiper-slide h-auto">
+                    <div class="glass-card rounded-3xl p-5 hover-lift group border border-cyan-500/20 h-full">
+                        <div class="relative mb-6 overflow-hidden rounded-2xl aspect-square">
+                            <img src="photos/keshav gupta.jpeg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 flex items-end justify-center pb-6 gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="#" class="w-10 h-10 rounded-full bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center hover:bg-cyan-500 transition"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-blue-500/20 border border-blue-400/50 flex items-center justify-center hover:bg-blue-600 transition"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h4 class="text-xl font-bold heading-font gradient-text mb-1">Keshav Gupta</h4>
+                            <p class="text-slate-400 text-sm uppercase">Volunteer</p>
+                        </div>
+                    </div>
+                </div>
+
+
+                     <div class="swiper-slide h-auto">
+                    <div class="glass-card rounded-3xl p-5 hover-lift group border border-cyan-500/20 h-full">
+                        <div class="relative mb-6 overflow-hidden rounded-2xl aspect-square">
+                            <img src="photos/saksham.jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 flex items-end justify-center pb-6 gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="#" class="w-10 h-10 rounded-full bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center hover:bg-cyan-500 transition"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-blue-500/20 border border-blue-400/50 flex items-center justify-center hover:bg-blue-600 transition"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h4 class="text-xl font-bold heading-font gradient-text mb-1">Saksham</h4>
+                            <p class="text-slate-400 text-sm uppercase">Volunteer</p>
+                        </div>
+                    </div>
+                </div>
+
+
+                   <div class="swiper-slide h-auto">
+                    <div class="glass-card rounded-3xl p-5 hover-lift group border border-cyan-500/20 h-full">
+                        <div class="relative mb-6 overflow-hidden rounded-2xl aspect-square">
+                            <img src="photos/arjun.png" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 flex items-end justify-center pb-6 gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="#"
+                               target="_blank"  
+                                class="w-10 h-10 rounded-full bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center hover:bg-cyan-500 transition"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                                <a href="#" 
+                                target="_blank"
+                                class="w-10 h-10 rounded-full bg-blue-500/20 border border-blue-400/50 flex items-center justify-center hover:bg-blue-600 transition"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h4 class="text-xl font-bold heading-font gradient-text mb-1">ARJUN THAKUR</h4>
+                            <p class="text-slate-400 text-sm uppercase">VOLUNTEER</p>
+                        </div>
+                    </div>
+                </div>
+
+                
+
+                 <div class="swiper-slide h-auto">
+                    <div class="glass-card rounded-3xl p-5 hover-lift group border border-cyan-500/20 h-full">
+                        <div class="relative mb-6 overflow-hidden rounded-2xl aspect-square">
+                            <img src="photos/anushika.jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 flex items-end justify-center pb-6 gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="#"
+                               target="_blank"  
+                                class="w-10 h-10 rounded-full bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center hover:bg-cyan-500 transition"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                                <a href="#" 
+                                target="_blank"
+                                class="w-10 h-10 rounded-full bg-blue-500/20 border border-blue-400/50 flex items-center justify-center hover:bg-blue-600 transition"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h4 class="text-xl font-bold heading-font gradient-text mb-1">ANUSHIKA</h4>
+                            <p class="text-slate-400 text-sm uppercase">VOLUNTEER</p>
+                        </div>
+                    </div>
+                </div>
+
+                 <div class="swiper-slide h-auto">
+                    <div class="glass-card rounded-3xl p-5 hover-lift group border border-cyan-500/20 h-full">
+                        <div class="relative mb-6 overflow-hidden rounded-2xl aspect-square">
+                            <img src="photos/aditya.png" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 flex items-end justify-center pb-6 gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="#"
+                               target="_blank"  
+                                class="w-10 h-10 rounded-full bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center hover:bg-cyan-500 transition"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                                <a href="#" 
+                                target="_blank"
+                                class="w-10 h-10 rounded-full bg-blue-500/20 border border-blue-400/50 flex items-center justify-center hover:bg-blue-600 transition"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h4 class="text-xl font-bold heading-font gradient-text mb-1">ADITYA</h4>
+                            <p class="text-slate-400 text-sm uppercase">VOLUNTEER</p>
+                        </div>
+                    </div>
+                </div>
+<div class="swiper-slide h-auto">
+                    <div class="glass-card rounded-3xl p-5 hover-lift group border border-cyan-500/20 h-full">
+                        <div class="relative mb-6 overflow-hidden rounded-2xl aspect-square">
+                            <img src="photos/25bms005krish.png" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 flex items-end justify-center pb-6 gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="#" class="w-10 h-10 rounded-full bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center hover:bg-cyan-500 transition"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-blue-500/20 border border-blue-400/50 flex items-center justify-center hover:bg-blue-600 transition"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h4 class="text-xl font-bold heading-font gradient-text mb-1">KRISH</h4>
+                            <p class="text-slate-400 text-sm uppercase">MEMBER</p>
+                        </div>
+                    </div>
+                </div>
+
+
+                </div>
+            
+            <div class="swiper-pagination"></div>
+            
+            <div class="swiper-button-next !text-cyan-400"></div>
+            <div class="swiper-button-prev !text-cyan-400"></div>
+        </div>
+    </div>
+</section>
+<section id="material-lab" class="py-20 px-4 relative">
+    <div class="max-w-4xl mx-auto text-center">
+        <h2 class="text-3xl md:text-4xl font-bold mb-6 heading-font">
+            <span class="gradient-text glow-text">Material Decryption Lab</span>
+        </h2>
+        <p class="text-slate-400 mb-12 max-w-2xl mx-auto">
+            Interact with the Quantum Scanner to identify unknown element structures and access classified research data.
+        </p>
+
+        <div class="glass-card rounded-3xl p-1 relative overflow-hidden group max-w-2xl mx-auto">
+            <div class="neon-border rounded-3xl p-8 md:p-12 bg-black/90">
+                
+                <div class="relative w-48 h-48 mx-auto mb-8 flex items-center justify-center">
+                    <div class="absolute inset-0 border-2 border-dashed border-cyan-500/30 rounded-full animate-[spin_10s_linear_infinite]"></div>
+                    <div class="absolute inset-4 border-2 border-cyan-400/20 rounded-full animate-[spin_6s_linear_infinite_reverse]"></div>
+                    
+                    <div class="relative z-10 w-24 h-24 hexagon bg-cyan-950/50 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                        <i data-lucide="scan-eye" class="w-12 h-12 text-cyan-400 animate-pulse"></i>
+                    </div>
+                    
+                    <div class="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-400/20 to-transparent h-1/2 w-full top-0 animate-[scan_2s_ease-in-out_infinite] pointer-events-none"></div>
+                </div>
+
+                <div class="space-y-4 mb-8">
+                    <div class="text-xs font-mono text-cyan-500 uppercase tracking-widest">Status: Awaiting Subject</div>
+                    <h3 class="text-2xl font-bold heading-font text-white">ELEMENTAL DISCOVERY</h3>
+                    <p class="text-slate-400 text-sm">Access the external database to view atomic lattices, crystalline properties, and phase transformation logs.</p>
+                </div>
+
+                <button onclick="initiateMaterialScan()" class="btn-primary px-10 py-4 rounded-xl font-bold text-white flex items-center justify-center gap-3 mx-auto group">
+                    <span id="scan-text">INITIATE QUANTUM SCAN</span>
+                    <i data-lucide="terminal" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                </button>
+
+                <div class="mt-8 flex justify-center gap-2">
+                    <div class="h-1 w-8 bg-cyan-500 animate-pulse"></div>
+                    <div class="h-1 w-8 bg-cyan-900"></div>
+                    <div class="h-1 w-8 bg-cyan-900"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+        
+      <section id="aethera" class="py-20 px-4 relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-black via-blue-950 to-cyan-950 opacity-40"></div>
+    <div class="absolute inset-0" style="background: radial-gradient(circle at 50% 50%, rgba(0, 245, 255, 0.4) 0%, transparent 50%);"></div>
+
+    <div class="max-w-6xl mx-auto relative z-10">
+        <div class="glass-card rounded-2xl p-8 md:p-12 mb-8 hover-lift">
+            
+            <h3 class="text-3xl font-bold mb-8 heading-font text-center">
+                <span class="gradient-text glow-text">Blogs </span>
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <a href="blog-post.html?id=nimbus-2026" target="_blank" class="btn">
+                 
+                <div class="glass-card p-6 rounded-2xl hover-lift border border-white/10">
+                   
+                   
+                    <h4 class="text-xl font-bold mb-2 heading-font gradient-text">NIMBUS 2026</h4>
+                    <p class="text-slate-400 text-sm">February 14-16, 2026</p>
+                    <p class="text-slate-400 text-sm">NIT Hamirpur</p>
+                </div>
+                </a>
+              
+
+                 <a href="blog-post.html?id=campus-life" target="_blank" class="btn">
+                <div class="glass-card p-6 rounded-2xl hover-lift border border-white/10">
+                   
+                   
+                    <h4 class="text-xl font-bold mb-2 heading-font gradient-text">NIMBUS 2026</h4>
+                    <p class="text-slate-400 text-sm">February 14-16, 2026</p>
+                    <p class="text-slate-400 text-sm">NIT Hamirpur</p>
+                </div></a>
+
+                 
+             <a href="blog-post.html?id=nimbus-2026" target="_blank" class="btn">
+                <div class="glass-card p-6 rounded-2xl hover-lift border border-white/10">
+                   
+                   
+                    <h4 class="text-xl font-bold mb-2 heading-font gradient-text">NIMBUS 2026</h4>
+                    <p class="text-slate-400 text-sm">February 14-16, 2026</p>
+                    <p class="text-slate-400 text-sm">NIT Hamirpur</p>
+                </div></a>
+
+                 
+            
+
+                 
+                <a href="blog-post.html?id=nimbus-2026" target="_blank" class="btn">
+                <div class="glass-card p-6 rounded-2xl hover-lift border border-white/10">
+                   
+                   
+                    <h4 class="text-xl font-bold mb-2 heading-font gradient-text">NIMBUS 2026</h4>
+                    <p class="text-slate-400 text-sm">February 14-16, 2026</p>
+                    <p class="text-slate-400 text-sm">NIT Hamirpur</p>
+                </div></a>
+
+                 
+                 
+              <a href="blog-post.html?id=nimbus-2026" target="_blank" class="btn">
+                <div class="glass-card p-6 rounded-2xl hover-lift border border-white/10">
+                   
+                   
+                    <h4 class="text-xl font-bold mb-2 heading-font gradient-text">NIMBUS 2026</h4>
+                    <p class="text-slate-400 text-sm">February 14-16, 2026</p>
+                    <p class="text-slate-400 text-sm">NIT Hamirpur</p>
+                </div></a>
+
+                 
+                
+                 
+                <a href="blog-post.html?id=nimbus-2026" target="_blank" class="btn">
+                <div class="glass-card p-6 rounded-2xl hover-lift border border-white/10">
+                   
+                   
+                    <h4 class="text-xl font-bold mb-2 heading-font gradient-text">NIMBUS 2026</h4>
+                    <p class="text-slate-400 text-sm">February 14-16, 2026</p>
+                    <p class="text-slate-400 text-sm">NIT Hamirpur</p>
+                </div></a>
+
+                 
+                
+
+
+
+            </div>
+         </div>
+    </div>
+</section>
+        
+        <!-- Contact Section -->
+        <section id="contact" class="py-20 px-4">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-4xl md:text-5xl font-bold mb-12 text-center glow-text heading-font">
+                    Get In Touch
+                </h2>
+                <div class="glass-card rounded-3xl p-8 md:p-12">
+                    <form class="space-y-6">
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-semibold mb-2">Name</label>
+                                <input type="text" placeholder="Your Name" class="w-full px-4 py-3 rounded-lg text-white">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-2">Email</label>
+                                <input type="email" placeholder="your.email@example.com" class="w-full px-4 py-3 rounded-lg text-white">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-2">Subject</label>
+                            <input type="text" placeholder="What's this about?" class="w-full px-4 py-3 rounded-lg text-white">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-2">Message</label>
+                            <textarea rows="5" placeholder="Tell us more..." class="w-full px-4 py-3 rounded-lg text-white resize-none"></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary w-full py-4 rounded-lg font-bold text-white">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer class="py-12 px-4 border-t border-cyan-900 border-opacity-30">
+            <div class="max-w-8xl mx-auto">
+                <div class="grid md:grid-cols-3 gap-8 mb-8">
+                    <div>
+                        <img src="photos/logo (1).png" alt="Team Metamorph Logo" class="h-10 w-auto">
+                        <h3 class="text-2xl font-bold mb-4 heading-font glow-text">TEAM METAMORPH</h3>
+                        <p class="text-slate-400 text-sm">
+                            <b>Departmental Club of Material Science & Engineering</b><br>
+                            NIT Hamirpur, HP 177005
+                        </p>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                        <ul class="space-y-2 text-slate-400 text-sm">
+                            <li><a href="#about" class="hover:text-cyan-400 transition">About Us</a></li>
+                            <li><a href="#projects" class="hover:text-cyan-400 transition">Projects</a></li>
+                            <li><a href="#team" class="hover:text-cyan-400 transition">Team</a></li>
+                            <li><a href="#aethera" class="hover:text-cyan-400 transition">NIMBUS</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold mb-4">Connect With Us</h4>
+                        <div class="flex space-x-4">
+                            <a href="#" class="glass-card w-10 h-10 rounded-full flex items-center justify-center hover:bg-cyan-500 hover:bg-opacity-30 transition">
+                                <i data-lucide="instagram" class="w-5 h-5"></i>
+                            </a>
+                            <a href="#" class="glass-card w-10 h-10 rounded-full flex items-center justify-center hover:bg-cyan-500 hover:bg-opacity-30 transition">
+                                <i data-lucide="linkedin" class="w-5 h-5"></i>
+                            </a>
+                            <a href="#" class="glass-card w-10 h-10 rounded-full flex items-center justify-center hover:bg-cyan-500 hover:bg-opacity-30 transition">
+                                <i data-lucide="twitter" class="w-5 h-5"></i>
+                            </a>
+                            <a href="#" class="glass-card w-10 h-10 rounded-full flex items-center justify-center hover:bg-cyan-500 hover:bg-opacity-30 transition">
+                                <i data-lucide="mail" class="w-5 h-5"></i>
+                            </a>
+                        </div>
+                        <p class="text-slate-400 text-sm mt-4">
+                            metamorph@nith.ac.in
+                        </p>
+                    </div>
+                </div>
+                <div class="border-t border-cyan-900 border-opacity-30 pt-8 text-center text-slate-500 text-sm">
+                    <p>&copy; 2026 Team Metamorph, NIT Hamirpur. All rights reserved.</p>
+                    <p class="mt-2">Designed for NIMBUS 2026 | Aethera: Beyond the Sentient</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+        
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // Close mobile menu when clicking on a link
+        const mobileLinks = mobileMenu.querySelectorAll('a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+        // Auto-Flip Logo Logic
+const flipper = document.getElementById('logo-flipper');
+
+setInterval(() => {
+    flipper.classList.toggle('is-flipped');
+}, 2000); // Change logo every 4 seconds
+        // 3D Rotating Atomic Structure Background
+        const atomicCanvas = document.getElementById('atomic-canvas');
+        const atomicCtx = atomicCanvas.getContext('2d');
+        
+        atomicCanvas.width = window.innerWidth;
+        atomicCanvas.height = window.innerHeight;
+        
+        let angle = 0;
+        const atomicStructures = [];
+        
+        class AtomicStructure {
+            constructor(x, y, size) {
+                this.x = x;
+                this.y = y;
+                this.size = size;
+                this.rotation = Math.random() * Math.PI * 2;
+                this.rotationSpeed = (Math.random() - 0.5) * 0.02;
+            }
+            
+            draw() {
+                atomicCtx.save();
+                atomicCtx.translate(this.x, this.y);
+                atomicCtx.rotate(this.rotation);
+                
+                // Draw hexagonal atomic structure
+                const sides = 6;
+                atomicCtx.beginPath();
+                for (let i = 0; i < sides; i++) {
+                    const angle = (Math.PI * 2 * i) / sides;
+                    const x = Math.cos(angle) * this.size;
+                    const y = Math.sin(angle) * this.size;
+                    if (i === 0) {
+                        atomicCtx.moveTo(x, y);
+                    } else {
+                        atomicCtx.lineTo(x, y);
+                    }
+                }
+                atomicCtx.closePath();
+                atomicCtx.strokeStyle = 'rgba(0, 245, 255, 0.4)';
+                atomicCtx.lineWidth = 2;
+                atomicCtx.stroke();
+                
+                // Draw center nucleus
+                atomicCtx.beginPath();
+                atomicCtx.arc(0, 0, this.size * 0.2, 0, Math.PI * 2);
+                const gradient = atomicCtx.createRadialGradient(0, 0, 0, 0, 0, this.size * 0.2);
+                gradient.addColorStop(0, 'rgba(0, 245, 255, 1)');
+                gradient.addColorStop(1, 'rgba(0, 212, 255, 0.5)');
+                atomicCtx.fillStyle = gradient;
+                atomicCtx.fill();
+                
+                atomicCtx.restore();
+                
+                this.rotation += this.rotationSpeed;
+            }
+        }
+        
+        function initAtomicStructures() {
+            atomicStructures.length = 0;
+            const structureCount = Math.floor((window.innerWidth * window.innerHeight) / 100000);
+            for (let i = 0; i < structureCount; i++) {
+                atomicStructures.push(new AtomicStructure(
+                    Math.random() * atomicCanvas.width,
+                    Math.random() * atomicCanvas.height,
+                    Math.random() * 30 + 20
+                ));
+            }
+        }
+        
+        function animateAtomicStructures() {
+            atomicCtx.clearRect(0, 0, atomicCanvas.width, atomicCanvas.height);
+            
+            atomicStructures.forEach(structure => {
+                structure.draw();
+            });
+            
+      requestAnimationFrame(animateAtomicStructures);
+        }
+        
+        initAtomicStructures();
+        animateAtomicStructures();
+        
+        // Enhanced Animated Particle Background with Mouse Interaction
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        let particles = [];
+        const particleCount = 170;
+        const connectionDistance = 200;
+        let mouse = { x: null, y: null, radius: 150 };
+        
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+        
+        window.addEventListener('mouseout', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+        
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.7;
+                this.vy = (Math.random() - 0.5) * 0.7;
+                this.radius = Math.random() * 2 + 1;
+                this.color = this.getRandomColor();
+            }
+            
+            getRandomColor() {
+                const colors = [
+                    'rgba(0, 245, 255, 0.9)',     // Electric Cyan
+                    'rgba(0, 212, 255, 0.9)',     // Bright Blue
+                    'rgba(0, 153, 255, 0.9)',     // Deep Blue
+                    'rgba(0, 255, 234, 0.9)'      // Aqua
+                ];
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+          // Replace the Particle class 'update' method with this:
+update() {
+    if (mouse.x != null && mouse.y != null) {
+        const dx = mouse.x - this.x;
+        const dy = mouse.y - this.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        if (distance < mouse.radius) {
+            // "Electric" snap effect: particles move much faster when close
+            const force = (mouse.radius - distance) / mouse.radius;
+            const angle = Math.atan2(dy, dx);
+            const moveX = Math.cos(angle) * force * 2.5; // Increased power
+            const moveY = Math.sin(angle) * force * 2.5;
+            
+            this.vx -= moveX;
+            this.vy -= moveY;
+        }
+    }
+    
+    // Normal movement
+    this.x += this.vx;
+    this.y += this.vy;
+    
+    // Bounce off edges with full velocity retention
+    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+    
+    // Reduced friction (0.95) for more "sliding" but snappy movement
+    this.vx *= 0.95; 
+    this.vy *= 0.95;
+    
+    // Minimum speed to keep them from stopping
+    if(Math.abs(this.vx) < 0.1) this.vx += (Math.random() - 0.5);
+    if(Math.abs(this.vy) < 0.1) this.vy += (Math.random() - 0.5);
+}
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                
+                // Glow effect
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = this.color;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+        }
+        
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+        function connectParticles() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < connectionDistance) {
+                        const opacity = 1 - (distance / connectionDistance);
+                        ctx.beginPath();
+                        
+                        // Create gradient for connection line
+                        const gradient = ctx.createLinearGradient(
+                            particles[i].x, particles[i].y,
+                            particles[j].x, particles[j].y
+                        );
+                        gradient.addColorStop(0, `rgba(0, 245, 255, ${opacity * 0.5})`);
+                        gradient.addColorStop(1, `rgba(0, 212, 255, ${opacity * 0.5})`);
+                        
+                        ctx.strokeStyle = gradient;
+                        ctx.lineWidth = 1;
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+        
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+            
+            connectParticles();
+            
+            requestAnimationFrame(animate);
+        }
+        
+        initParticles();
+        animate();
+        
+        // Resize canvas on window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            atomicCanvas.width = window.innerWidth;
+            atomicCanvas.height = window.innerHeight;
+            initParticles();
+            initAtomicStructures();
+        });
+        
+        // Parallax Scrolling Effect
+        let scrollY = 0;
+        window.addEventListener('scroll', () => {
+            scrollY = window.scrollY;
+            
+            // Move particle canvas slower than scroll
+            canvas.style.transform = `translateY(${scrollY * 0.5}px)`;
+            atomicCanvas.style.transform = `translateY(${scrollY * 0.3}px)`;
+        });
+        
+        // Form Submission Handler
+        const form = document.querySelector('form');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Thank you for reaching out! We will get back to you soon.');
+            form.reset();
+        });
+        
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // Observe all sections
+        document.querySelectorAll('section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(30px)';
+            section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            observer.observe(section);
+        });
+
+const swiper = new Swiper(".teamSwiper", {
+    slidesPerView: 1,
+    spaceBetween: 20,
+    loop: false, // Set to true if you want it to loop infinitely
+    centeredSlides: false,
+    pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+        dynamicBullets: true,
+    },
+    navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+    },
+    breakpoints: {
+        640: {
+            slidesPerView: 2,
+            spaceBetween: 20,
+        },
+        768: {
+            slidesPerView: 3,
+            spaceBetween: 30,
+        },
+        1024: {
+            slidesPerView: 4,
+            spaceBetween: 30,
+        },
+    },
+});
+
+function initiateMaterialScan() {
+    const btnText = document.getElementById('scan-text');
+    const container = document.querySelector('#material-lab .glass-card');
+    
+    // Visual feedback
+    btnText.innerText = "DECRYPTING DATA...";
+    container.classList.add('scanning-active');
+    
+    // Play a small sound if you have one, or just proceed to redirection
+    setTimeout(() => {
+        // REPLACE 'your-file.pdf' with your actual external file path or URL
+        window.open('nn.html', '_blank');
+        
+        // Reset after a delay
+        setTimeout(() => {
+            btnText.innerText = "INITIATE QUANTUM SCAN";
+            container.classList.remove('scanning-active');
+        }, 1000);
+    }, 1500); // 1.5 second "scanning" delay for effect
+}
+
+    </script>
+</body>
+</html>
+
+

@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MatProp Real-Time - Material Property Search</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="materials.js"></script>
+    <style>
+        /* ===== BACKGROUND IMAGE - REPLACE WITH YOUR PNG ===== */
+        body {
+            background-image: url('photos/backdash.jpeg'); /* Replace with your PNG image path */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+        /* If you want a dark overlay on your background image */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7); /* Adjust opacity (0.7) to control darkness */
+            z-index: -1;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.4s ease-out;
+        }
+        .glow {
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+        }
+        
+        /* Center search box initially */
+        .center-mode {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .center-mode .search-container {
+            max-width: 600px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen">
+    <!-- Initial Centered View -->
+    <div id="centerView" class="center-mode px-4">
+        <div class="search-container">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <h1 class="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent mb-2">
+                    MatProp Real-Time
+                </h1>
+                <p class="text-gray-400 text-lg">Instant Material Property Lookup</p>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="bg-gray-800 rounded-lg p-6 glow">
+                <div class="flex flex-col gap-4">
+                    <input 
+                        type="text" 
+                        id="materialInput" 
+                        placeholder="Enter material name (e.g., Graphene, 304 Stainless Steel)"
+                        class="bg-gray-700 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        onkeypress="if(event.key === 'Enter') searchMaterial()"
+                    >
+                    <button 
+                        id="searchBtn"
+                        onclick="searchMaterial()" 
+                        class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-semibold transition-colors"
+                    >
+                        Search Properties
+                    </button>
+                </div>
+                <div class="mt-4 text-sm text-gray-400">
+                    <p>🔧 <strong>Setup:</strong> Add your Google Custom Search API credentials in the code</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results View (hidden initially) -->
+    <div id="resultsView" class="hidden">
+        <div class="container mx-auto px-4 py-8 max-w-7xl">
+            <!-- Header with Search -->
+            <div class="text-center mb-6">
+                <h1 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent mb-4">
+                    MatProp Real-Time
+                </h1>
+                
+                <!-- Compact Search Bar -->
+                <div class="max-w-2xl mx-auto bg-gray-800 rounded-lg p-4 mb-6 glow">
+                    <div class="flex flex-col md:flex-row gap-3">
+                        <input 
+                            type="text" 
+                            id="materialInputTop" 
+                            placeholder="Search another material..."
+                            class="flex-1 bg-gray-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            onkeypress="if(event.key === 'Enter') searchMaterial()"
+                        >
+                        <button 
+                            onclick="searchMaterial()" 
+                            class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg font-semibold transition-colors"
+                        >
+                            Search
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <!-- Main Content Area -->
+                <div class="lg:col-span-3">
+                    <!-- Loading State -->
+                    <div id="loadingState" class="hidden bg-gray-800 rounded-lg p-12 text-center">
+                        <div class="spinner w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+                        <p class="text-gray-400">Searching for material properties...</p>
+                    </div>
+
+                    <!-- Error State -->
+                    <div id="errorState" class="hidden bg-red-900/20 border border-red-500/50 rounded-lg p-6 mb-6">
+                        <p class="text-red-400" id="errorMessage"></p>
+                    </div>
+
+                    <!-- Results Container -->
+                    <div id="resultsContainer" class="hidden">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-2xl font-bold" id="materialName"></h2>
+                            <button 
+                                onclick="addToComparison()" 
+                                class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg font-semibold transition-colors text-sm"
+                            >
+                                + Add to Compare
+                            </button>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="propertiesGrid">
+                            <!-- Property cards will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comparison Sidebar -->
+                <div class="lg:col-span-1">
+                    <div class="bg-gray-800 rounded-lg p-6 sticky top-4">
+                        <h3 class="text-xl font-bold mb-4 flex items-center justify-between">
+                            Comparison List
+                            <button 
+                                onclick="clearComparison()" 
+                                class="text-xs bg-red-600/20 hover:bg-red-600/40 px-3 py-1 rounded transition-colors"
+                            >
+                                Clear
+                            </button>
+                        </h3>
+                        <div id="comparisonList" class="space-y-3">
+                            <p class="text-gray-500 text-sm italic">No materials added yet</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== CONFIGURATION ==========
+        const API_KEY = 'YOUR_GOOGLE_API_KEY_HERE';
+        const SEARCH_ENGINE_ID = 'YOUR_SEARCH_ENGINE_ID_HERE';
+
+        // ========== STATE MANAGEMENT ==========
+        let currentMaterial = null;
+        let comparisonMaterials = [];
+
+        // ========== PROPERTY DEFINITIONS ==========
+        const PROPERTIES = [
+            {
+                name: 'Density',
+                query: 'density',
+                icon: '⚖️',
+                color: 'blue',
+                patterns: [
+                    /(\d+\.?\d*)\s*(g\/cm³|g\/cc|kg\/m³|g\/ml)/gi,
+                    /density[:\s]+(\d+\.?\d*)\s*(g\/cm³|g\/cc|kg\/m³|g\/ml)/gi
+                ]
+            },
+            {
+                name: 'Melting Point',
+                query: 'melting point',
+                icon: '🔥',
+                color: 'red',
+                patterns: [
+                    /(\d+\.?\d*)\s*(°C|°F|K|celsius|fahrenheit)/gi,
+                    /melting point[:\s]+(\d+\.?\d*)\s*(°C|°F|K)/gi,
+                    /melts at[:\s]+(\d+\.?\d*)\s*(°C|°F|K)/gi
+                ]
+            },
+            {
+                name: 'Thermal Conductivity',
+                query: 'thermal conductivity',
+                icon: '🌡️',
+                color: 'green',
+                patterns: [
+                    /(\d+\.?\d*)\s*(W\/m·K|W\/mK|W\/m-K|W\/(m·K)|W\/(m K))/gi,
+                    /thermal conductivity[:\s]+(\d+\.?\d*)\s*(W\/m·K|W\/mK)/gi
+                ]
+            }
+        ];
+
+        // ========== SEARCH FUNCTION ==========
+        async function searchMaterial() {
+            const materialInput = document.getElementById('materialInput');
+            const materialInputTop = document.getElementById('materialInputTop');
+            const materialName = materialInput.value.trim() || materialInputTop.value.trim();
+
+            if (!materialName) {
+                showError('Please enter a material name');
+                return;
+            }
+
+            if (API_KEY === 'YOUR_GOOGLE_API_KEY_HERE' || SEARCH_ENGINE_ID === 'YOUR_SEARCH_ENGINE_ID_HERE') {
+                showError('Please configure your Google Custom Search API credentials in the code');
+                return;
+            }
+
+            // Switch to results view
+            document.getElementById('centerView').classList.add('hidden');
+            document.getElementById('resultsView').classList.remove('hidden');
+
+            // Sync input fields
+            materialInput.value = materialName;
+            materialInputTop.value = materialName;
+
+            // Show loading state
+            document.getElementById('loadingState').classList.remove('hidden');
+            document.getElementById('resultsContainer').classList.add('hidden');
+            document.getElementById('errorState').classList.add('hidden');
+
+            try {
+                // Perform parallel searches for all properties
+                const searchPromises = PROPERTIES.map(prop => 
+                    searchProperty(materialName, prop.query)
+                );
+
+                const results = await Promise.all(searchPromises);
+
+                // Parse results
+                currentMaterial = {
+                    name: materialName,
+                    properties: PROPERTIES.map((prop, index) => ({
+                        ...prop,
+                        ...parseSearchResults(results[index], prop),
+                        rawResults: results[index]
+                    }))
+                };
+
+                displayResults();
+
+            } catch (error) {
+                console.error('Search error:', error);
+                showError('Search failed. Please check your API credentials and try again.');
+            } finally {
+                document.getElementById('loadingState').classList.add('hidden');
+            }
+        }
+
+        // ========== API CALL FUNCTION ==========
+        async function searchProperty(material, property) {
+            const query = `${material} ${property}`;
+            const url = `https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${SEARCH_ENGINE_ID}&q=${encodeURIComponent(query)}`;
+
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`API request failed: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data;
+        }
+
+        // ========== PARSING FUNCTION ==========
+        function parseSearchResults(data, property) {
+            if (!data.items || data.items.length === 0) {
+                return {
+                    value: 'Not found',
+                    unit: '',
+                    source: null,
+                    confidence: 'low'
+                };
+            }
+
+            // Scan through snippets to find matches
+            for (const item of data.items) {
+                const snippet = item.snippet || '';
+                
+                for (const pattern of property.patterns) {
+                    const matches = [...snippet.matchAll(pattern)];
+                    
+                    if (matches.length > 0) {
+                        const match = matches[0];
+                        return {
+                            value: match[1],
+                            unit: match[2] || '',
+                            source: item.link,
+                            sourceTitle: item.title,
+                            confidence: 'high'
+                        };
+                    }
+                }
+            }
+
+            // If no pattern matched, return the first result as a fallback
+            return {
+                value: 'Check source',
+                unit: '',
+                source: data.items[0].link,
+                sourceTitle: data.items[0].title,
+                confidence: 'low'
+            };
+        }
+
+        // ========== DISPLAY FUNCTION ==========
+        function displayResults() {
+            const resultsContainer = document.getElementById('resultsContainer');
+            const materialNameEl = document.getElementById('materialName');
+            const propertiesGrid = document.getElementById('propertiesGrid');
+
+            materialNameEl.textContent = currentMaterial.name;
+            propertiesGrid.innerHTML = '';
+
+            currentMaterial.properties.forEach(prop => {
+                const card = createPropertyCard(prop);
+                propertiesGrid.appendChild(card);
+            });
+
+            resultsContainer.classList.remove('hidden');
+            resultsContainer.classList.add('fade-in');
+        }
+
+        // ========== CREATE PROPERTY CARD ==========
+        function createPropertyCard(prop) {
+            const card = document.createElement('div');
+            const borderColor = {
+                blue: 'border-blue-500',
+                red: 'border-red-500',
+                green: 'border-green-500'
+            }[prop.color];
+
+            const bgColor = {
+                blue: 'bg-blue-500/10',
+                red: 'bg-red-500/10',
+                green: 'bg-green-500/10'
+            }[prop.color];
+
+            const hasData = prop.value !== 'Not found' && prop.value !== 'Check source';
+
+            card.className = `bg-gray-800 rounded-lg p-6 border-l-4 ${borderColor} ${bgColor}`;
+            card.innerHTML = `
+                <div class="text-3xl mb-2">${prop.icon}</div>
+                <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-2">${prop.name}</h3>
+                <div class="text-2xl font-bold mb-3">
+                    ${hasData ? `${prop.value} <span class="text-lg text-gray-400">${prop.unit}</span>` : `<span class="text-gray-500">${prop.value}</span>`}
+                </div>
+                ${prop.source ? `
+                    <a href="${prop.source}" target="_blank" class="text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1">
+                        📎 View Source
+                    </a>
+                    <div class="text-xs text-gray-500 mt-1 truncate" title="${prop.sourceTitle || ''}">
+                        ${prop.sourceTitle || ''}
+                    </div>
+                ` : ''}
+            `;
+
+            return card;
+        }
+
+        // ========== COMPARISON FUNCTIONS ==========
+        function addToComparison() {
+            if (!currentMaterial) return;
+
+            // Check if already in comparison
+            if (comparisonMaterials.some(m => m.name === currentMaterial.name)) {
+                showError('Material already in comparison list');
+                return;
+            }
+
+            comparisonMaterials.push({...currentMaterial});
+            updateComparisonList();
+        }
+
+        function updateComparisonList() {
+            const comparisonList = document.getElementById('comparisonList');
+
+            if (comparisonMaterials.length === 0) {
+                comparisonList.innerHTML = '<p class="text-gray-500 text-sm italic">No materials added yet</p>';
+                return;
+            }
+
+            comparisonList.innerHTML = comparisonMaterials.map((material, index) => `
+                <div class="bg-gray-700 rounded-lg p-4 relative">
+                    <button 
+                        onclick="removeFromComparison(${index})" 
+                        class="absolute top-2 right-2 text-gray-400 hover:text-red-400 text-xs"
+                    >
+                        ✕
+                    </button>
+                    <h4 class="font-bold text-sm mb-2 pr-6">${material.name}</h4>
+                    ${material.properties.map(prop => {
+                        const hasData = prop.value !== 'Not found' && prop.value !== 'Check source';
+                        return `
+                            <div class="text-xs text-gray-400 mb-1">
+                                ${prop.icon} <span class="font-semibold">${prop.name}:</span>
+                                <span class="${hasData ? 'text-white' : 'text-gray-500'}">
+                                    ${hasData ? `${prop.value} ${prop.unit}` : prop.value}
+                                </span>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `).join('');
+        }
+
+        function removeFromComparison(index) {
+            comparisonMaterials.splice(index, 1);
+            updateComparisonList();
+        }
+
+        function clearComparison() {
+            comparisonMaterials = [];
+            updateComparisonList();
+        }
+
+        // ========== ERROR HANDLING ==========
+        function showError(message) {
+            // Check if we're in center view or results view
+            const inCenterView = !document.getElementById('centerView').classList.contains('hidden');
+            
+            if (inCenterView) {
+                // Show error as alert in center view
+                alert(message);
+            } else {
+                // Show error in results view
+                const errorState = document.getElementById('errorState');
+                const errorMessage = document.getElementById('errorMessage');
+                errorMessage.textContent = message;
+                errorState.classList.remove('hidden');
+                
+                setTimeout(() => {
+                    errorState.classList.add('hidden');
+                }, 5000);
+            }
+        }
+
+        // ========== INITIALIZE ==========
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('MatProp Real-Time initialized');
+            console.log('Please configure API_KEY and SEARCH_ENGINE_ID in the script section');
+        });
+    </script>
+</body>
+</html>
