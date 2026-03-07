@@ -1,474 +1,717 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MatProp Real-Time - Material Property Search</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="materials.js"></script>
-    <style>
-        /* ===== BACKGROUND IMAGE - REPLACE WITH YOUR PNG ===== */
-        body {
-            background-image: url('photos/backdash.jpeg'); /* Replace with your PNG image path */
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            background-repeat: no-repeat;
-        }
-        /* If you want a dark overlay on your background image */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7); /* Adjust opacity (0.7) to control darkness */
-            z-index: -1;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        .spinner {
-            animation: spin 1s linear infinite;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .fade-in {
-            animation: fadeIn 0.4s ease-out;
-        }
-        .glow {
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-        }
-        
-        /* Center search box initially */
-        .center-mode {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
-        .center-mode .search-container {
-            max-width: 600px;
-            width: 100%;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MatProp Real-Time - Material Property Search</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <script src="materials.js"></script>
+  <style>
+    :root {
+      --accent:        #3b9eff;
+      --accent-bright: #60b8ff;
+      --accent-dim:    #1a5fa8;
+      --border:        #1e3a5f;
+      --border-glow:   #2a6fbc;
+      --bg-card:       #111d2e;
+      --green:         #00e5a0;
+      --gold:          #f5a623;
+      --red:           #ff4d6a;
+      --mono:          'Share Tech Mono', monospace;
+      --display:       'Orbitron', sans-serif;
+      --ui:            'Rajdhani', sans-serif;
+    }
+
+    body {
+      background-image: url('photos/backdash.jpeg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+      font-family: var(--ui);
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.82);
+      z-index: -2;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(59,158,255,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59,158,255,.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    @keyframes spin    { to { transform: rotate(360deg); } }
+    @keyframes fadeIn  { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes pulse   { 0%,100% { opacity:1; } 50% { opacity:.3; } }
+
+    .spinner  { animation: spin 1s linear infinite; }
+    .fade-in  { animation: fadeIn .4s ease-out; }
+    .glow         { box-shadow: 0 0 20px rgba(59,130,246,.3); }
+    .glow-accent  { box-shadow: 0 0 22px rgba(59,158,255,.22); }
+
+    .center-mode { display:flex; align-items:center; justify-content:center; min-height:100vh; }
+    .center-mode .search-container { max-width:640px; width:100%; }
+
+    /* Quick tags */
+    .quick-tag {
+      font-family: var(--mono);
+      font-size: .78rem;
+      padding: .3rem .85rem;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      color: #a8c8f0;
+      cursor: pointer;
+      background: transparent;
+      transition: border-color .2s, color .2s, background .2s;
+      letter-spacing: .05em;
+    }
+    .quick-tag:hover { border-color:var(--accent); color:var(--accent); background:rgba(59,158,255,.07); }
+
+    /* Property bars */
+    .prop-bar-track { height:4px; background:var(--border); border-radius:2px; overflow:hidden; margin-top:10px; }
+    .prop-bar-fill  { height:100%; border-radius:2px; background:linear-gradient(90deg,var(--accent-dim),var(--accent)); width:0%; transition:width .9s cubic-bezier(.25,.8,.25,1); }
+
+    /* Symbol badge */
+    .symbol-badge {
+      width:90px; height:90px;
+      background: linear-gradient(135deg, var(--accent-dim), #080c14);
+      border: 2px solid var(--accent);
+      border-radius: 8px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      box-shadow: 0 0 22px rgba(59,158,255,.35);
+      flex-shrink: 0;
+    }
+    .symbol-badge .sym-atomic { font-family:var(--mono); font-size:.72rem; color:var(--accent); line-height:1.4; }
+    .symbol-badge .sym-letter { font-family:var(--display); font-size:2.2rem; font-weight:900; color:#fff; line-height:1; }
+    .symbol-badge .sym-weight { font-family:var(--mono); font-size:.65rem; color:#7ba5d6; line-height:1.4; }
+
+    /* Crystal badge */
+    .structure-badge {
+      display:inline-flex; align-items:center; gap:.4rem;
+      font-family:var(--mono); font-size:.78rem;
+      color:var(--gold); border:1px solid var(--gold);
+      border-radius:3px; padding:.3rem .85rem;
+    }
+
+    /* Image frame */
+    .vis-frame { border:1px solid var(--border); border-radius:6px; overflow:hidden; background:#080c14; position:relative; }
+    .vis-frame img { width:100%; display:block; object-fit:cover; transition:transform .4s ease; }
+    .vis-frame:hover img { transform:scale(1.04); }
+    .vis-frame .img-caption {
+      position:absolute; bottom:0; left:0; right:0;
+      padding:.4rem .8rem;
+      background:linear-gradient(transparent,rgba(0,0,0,.8));
+      font-family:var(--mono); font-size:.68rem; color:#a8c8f0; letter-spacing:.08em;
+    }
+
+    /* Status dot */
+    .status-dot { display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--green); box-shadow:0 0 7px var(--green); animation:pulse 2s ease-in-out infinite; flex-shrink:0; }
+
+    /* Error banner */
+    .error-banner {
+      background:rgba(255,77,106,.07); border-left:3px solid var(--red); border-radius:4px;
+      padding:1rem 1.4rem; font-family:var(--mono); font-size:.9rem; color:var(--red);
+      letter-spacing:.03em; display:flex; align-items:flex-start; gap:.7rem;
+    }
+
+    /* Demo banner */
+    .demo-banner {
+      background:rgba(0,229,160,.06); border:1px solid rgba(0,229,160,.3); border-left:3px solid var(--green);
+      border-radius:4px; padding:.85rem 1.25rem; font-family:var(--mono); font-size:.82rem;
+      color:var(--green); letter-spacing:.05em; display:flex; align-items:center; gap:.7rem;
+    }
+    .demo-banner .demo-dot { width:8px; height:8px; border-radius:50%; background:var(--green); box-shadow:0 0 7px var(--green); flex-shrink:0; animation:pulse 1.8s ease-in-out infinite; }
+
+    /* Info chip */
+    .info-chip { background:#1a2a3f; border:1px solid #2a5a8f; border-left:4px solid var(--accent); border-radius:10px; padding:1.4rem 1.5rem; transition: box-shadow .2s, border-color .2s; }
+    .info-chip:hover { box-shadow:0 0 22px rgba(59,158,255,.22); border-color:#60b8ff; }
+    .info-chip .chip-label { font-family:var(--mono); font-size:.9rem; color:#7dd3fc; letter-spacing:.12em; text-transform:uppercase; margin-bottom:.6rem; font-weight:700; }
+    .info-chip .chip-value { font-family:var(--ui); font-size:1.35rem; font-weight:700; color:#ffffff; word-break:break-word; line-height:1.4; }
+
+    /* Property card */
+    .prop-card { transition:border-color .2s, box-shadow .2s; }
+    .prop-card:hover { box-shadow:0 0 20px rgba(59,158,255,.15); }
+
+    /* Section heading */
+    .section-heading {
+      font-family:var(--mono); font-size:1rem; letter-spacing:.2em;
+      color:#60b8ff; text-transform:uppercase; font-weight:700;
+      text-shadow:0 0 14px rgba(96,184,255,.6);
+      padding: .3rem .25rem;
+    }
+
+    /* Label mono */
+    .label-mono { font-family:var(--mono); font-size:.72rem; letter-spacing:.15em; color:#7ba5d6; text-transform:uppercase; }
+  </style>
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen">
-    <!-- Initial Centered View -->
-    <div id="centerView" class="center-mode px-4">
-        <div class="search-container">
-            <!-- Header -->
-            <div class="text-center mb-8">
-                <h1 class="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent mb-2">
-                    MatProp Real-Time
-                </h1>
-                <p class="text-gray-400 text-lg">Instant Material Property Lookup</p>
-            </div>
 
-            <!-- Search Bar -->
-            <div class="bg-gray-800 rounded-lg p-6 glow">
-                <div class="flex flex-col gap-4">
-                    <input 
-                        type="text" 
-                        id="materialInput" 
-                        placeholder="Enter material name (e.g., Graphene, 304 Stainless Steel)"
-                        class="bg-gray-700 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        onkeypress="if(event.key === 'Enter') searchMaterial()"
-                    >
-                    <button 
-                        id="searchBtn"
-                        onclick="searchMaterial()" 
-                        class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-semibold transition-colors"
-                    >
-                        Search Properties
-                    </button>
-                </div>
-                <div class="mt-4 text-sm text-gray-400">
-                    <p>🔧 <strong>Setup:</strong> Add your Google Custom Search API credentials in the code</p>
-                </div>
-            </div>
+  <!-- ═══════════════════════════════════════════════════════
+       CENTERED SEARCH VIEW
+  ═══════════════════════════════════════════════════════ -->
+  <div id="centerView" class="center-mode px-4">
+    <div class="search-container">
+      <div class="text-center mb-8">
+        <div class="label-mono mb-2">// MATERIAL DATABASE v2.4.1</div>
+        <h1 class="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent mb-1" style="font-family:var(--display)">MatProp</h1>
+        <div class="text-xl tracking-widest text-blue-300 mb-2" style="font-family:var(--display)">REAL-TIME</div>
+        <p class="text-gray-400 text-base">Instant Material Property Lookup</p>
+      </div>
+
+      <div class="bg-gray-800 rounded-lg p-6 glow-accent border border-gray-700">
+        <div class="flex flex-col gap-4">
+          <div class="relative">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-blue-700" style="font-family:var(--mono);font-size:.85rem">//</span>
+            <input type="text" id="materialInput"
+              placeholder="Enter material name (e.g., Graphene, 304 Stainless Steel)"
+              class="w-full bg-gray-700 text-white pl-9 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+              style="font-family:var(--mono)"
+              onkeypress="if(event.key==='Enter') searchMaterial();" />
+          </div>
+          <button onclick="searchMaterial()"
+            class="bg-blue-600 hover:bg-blue-500 px-6 py-3 rounded-lg font-semibold transition-all tracking-widest hover:shadow-lg hover:shadow-blue-500/25"
+            style="font-family:var(--display);font-size:.75rem">
+            SEARCH PROPERTIES
+          </button>
         </div>
-    </div>
-
-    <!-- Results View (hidden initially) -->
-    <div id="resultsView" class="hidden">
-        <div class="container mx-auto px-4 py-8 max-w-7xl">
-            <!-- Header with Search -->
-            <div class="text-center mb-6">
-                <h1 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent mb-4">
-                    MatProp Real-Time
-                </h1>
-                
-                <!-- Compact Search Bar -->
-                <div class="max-w-2xl mx-auto bg-gray-800 rounded-lg p-4 mb-6 glow">
-                    <div class="flex flex-col md:flex-row gap-3">
-                        <input 
-                            type="text" 
-                            id="materialInputTop" 
-                            placeholder="Search another material..."
-                            class="flex-1 bg-gray-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            onkeypress="if(event.key === 'Enter') searchMaterial()"
-                        >
-                        <button 
-                            onclick="searchMaterial()" 
-                            class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg font-semibold transition-colors"
-                        >
-                            Search
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                <!-- Main Content Area -->
-                <div class="lg:col-span-3">
-                    <!-- Loading State -->
-                    <div id="loadingState" class="hidden bg-gray-800 rounded-lg p-12 text-center">
-                        <div class="spinner w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-                        <p class="text-gray-400">Searching for material properties...</p>
-                    </div>
-
-                    <!-- Error State -->
-                    <div id="errorState" class="hidden bg-red-900/20 border border-red-500/50 rounded-lg p-6 mb-6">
-                        <p class="text-red-400" id="errorMessage"></p>
-                    </div>
-
-                    <!-- Results Container -->
-                    <div id="resultsContainer" class="hidden">
-                        <div class="flex justify-between items-center mb-4">
-                            <h2 class="text-2xl font-bold" id="materialName"></h2>
-                            <button 
-                                onclick="addToComparison()" 
-                                class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg font-semibold transition-colors text-sm"
-                            >
-                                + Add to Compare
-                            </button>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="propertiesGrid">
-                            <!-- Property cards will be inserted here -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Comparison Sidebar -->
-                <div class="lg:col-span-1">
-                    <div class="bg-gray-800 rounded-lg p-6 sticky top-4">
-                        <h3 class="text-xl font-bold mb-4 flex items-center justify-between">
-                            Comparison List
-                            <button 
-                                onclick="clearComparison()" 
-                                class="text-xs bg-red-600/20 hover:bg-red-600/40 px-3 py-1 rounded transition-colors"
-                            >
-                                Clear
-                            </button>
-                        </h3>
-                        <div id="comparisonList" class="space-y-3">
-                            <p class="text-gray-500 text-sm italic">No materials added yet</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <!-- Quick tags -->
+        <div class="mt-4 flex flex-wrap gap-2 items-center">
+          <span style="font-family:var(--mono);font-size:.6rem;color:#3e6a9e;letter-spacing:.1em">QUICK:</span>
+          <button class="quick-tag" onclick="quickSearch('Iron')">Iron</button>
+          <button class="quick-tag" onclick="quickSearch('Copper')">Copper</button>
+          <button class="quick-tag" onclick="quickSearch('Aluminum')">Aluminum</button>
+          <button class="quick-tag" onclick="quickSearch('Titanium')">Titanium</button>
+          <button class="quick-tag" onclick="quickSearch('Steel')">Steel</button>
+          <button class="quick-tag" onclick="quickSearch('Gold')">Gold</button>
         </div>
+        <div class="mt-4 flex items-center gap-2">
+          <span class="status-dot"></span>
+          <span style="font-family:var(--mono);font-size:.62rem;color:#3e6a9e;letter-spacing:.08em">Configure Google API credentials — API_KEY &amp; SEARCH_ENGINE_ID</span>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <script>
-        // ========== CONFIGURATION ==========
-        const API_KEY = 'YOUR_GOOGLE_API_KEY_HERE';
-        const SEARCH_ENGINE_ID = 'YOUR_SEARCH_ENGINE_ID_HERE';
+  <!-- ═══════════════════════════════════════════════════════
+       RESULTS VIEW
+  ═══════════════════════════════════════════════════════ -->
+  <div id="resultsView" class="hidden">
+    <div class="container mx-auto px-4 py-8 max-w-7xl">
 
-        // ========== STATE MANAGEMENT ==========
-        let currentMaterial = null;
-        let comparisonMaterials = [];
+      <!-- Top header + search bar -->
+      <div class="text-center mb-6">
+        <h1 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent mb-4" style="font-family:var(--display)">
+          MatProp <span class="text-2xl">Real-Time</span>
+        </h1>
+        <div class="max-w-2xl mx-auto bg-gray-800 rounded-lg p-4 mb-6 glow border border-gray-700">
+          <div class="flex flex-col md:flex-row gap-3">
+            <div class="relative flex-1">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-blue-700" style="font-family:var(--mono);font-size:.8rem">//</span>
+              <input type="text" id="materialInputTop"
+                placeholder="Search another material..."
+                class="w-full bg-gray-700 text-white pl-8 pr-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                style="font-family:var(--mono)"
+                onkeypress="if(event.key==='Enter') searchMaterial();" />
+            </div>
+            <button onclick="searchMaterial()"
+              class="bg-blue-600 hover:bg-blue-500 px-6 py-2 rounded-lg font-semibold transition-all tracking-widest"
+              style="font-family:var(--display);font-size:.7rem">SEARCH</button>
+          </div>
+          <div class="mt-3 flex flex-wrap gap-2 items-center justify-center">
+            <span style="font-family:var(--mono);font-size:.58rem;color:#3e6a9e">QUICK:</span>
+            <button class="quick-tag" onclick="quickSearch('Iron')">Iron</button>
+            <button class="quick-tag" onclick="quickSearch('Copper')">Copper</button>
+            <button class="quick-tag" onclick="quickSearch('Aluminum')">Aluminum</button>
+            <button class="quick-tag" onclick="quickSearch('Titanium')">Titanium</button>
+            <button class="quick-tag" onclick="quickSearch('Steel')">Steel</button>
+            <button class="quick-tag" onclick="quickSearch('Gold')">Gold</button>
+          </div>
+        </div>
+      </div>
 
-        // ========== PROPERTY DEFINITIONS ==========
-        const PROPERTIES = [
-            {
-                name: 'Density',
-                query: 'density',
-                icon: '⚖️',
-                color: 'blue',
-                patterns: [
-                    /(\d+\.?\d*)\s*(g\/cm³|g\/cc|kg\/m³|g\/ml)/gi,
-                    /density[:\s]+(\d+\.?\d*)\s*(g\/cm³|g\/cc|kg\/m³|g\/ml)/gi
-                ]
-            },
-            {
-                name: 'Melting Point',
-                query: 'melting point',
-                icon: '🔥',
-                color: 'red',
-                patterns: [
-                    /(\d+\.?\d*)\s*(°C|°F|K|celsius|fahrenheit)/gi,
-                    /melting point[:\s]+(\d+\.?\d*)\s*(°C|°F|K)/gi,
-                    /melts at[:\s]+(\d+\.?\d*)\s*(°C|°F|K)/gi
-                ]
-            },
-            {
-                name: 'Thermal Conductivity',
-                query: 'thermal conductivity',
-                icon: '🌡️',
-                color: 'green',
-                patterns: [
-                    /(\d+\.?\d*)\s*(W\/m·K|W\/mK|W\/m-K|W\/(m·K)|W\/(m K))/gi,
-                    /thermal conductivity[:\s]+(\d+\.?\d*)\s*(W\/m·K|W\/mK)/gi
-                ]
-            }
-        ];
+      <!-- Main layout: 3-col content + 1-col sidebar -->
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
 
-        // ========== SEARCH FUNCTION ==========
-        async function searchMaterial() {
-            const materialInput = document.getElementById('materialInput');
-            const materialInputTop = document.getElementById('materialInputTop');
-            const materialName = materialInput.value.trim() || materialInputTop.value.trim();
+        <!-- ── LEFT: MAIN CONTENT (3 cols) ── -->
+        <div class="lg:col-span-3 space-y-5">
 
-            if (!materialName) {
-                showError('Please enter a material name');
-                return;
-            }
+          <!-- Loading -->
+          <div id="loadingState" class="hidden bg-gray-800 rounded-lg p-12 text-center border border-gray-700">
+            <div class="spinner w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+            <p style="font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;color:#9ca3af">QUERYING MATERIAL DATABASE…</p>
+          </div>
 
-            if (API_KEY === 'YOUR_GOOGLE_API_KEY_HERE' || SEARCH_ENGINE_ID === 'YOUR_SEARCH_ENGINE_ID_HERE') {
-                showError('Please configure your Google Custom Search API credentials in the code');
-                return;
-            }
+          <!-- Error -->
+          <div id="errorState" class="hidden">
+            <div class="error-banner">
+              <span style="flex-shrink:0;margin-top:1px">⚠</span>
+              <div>
+                <div style="font-weight:700;letter-spacing:.06em;margin-bottom:.2rem">QUERY ERROR</div>
+                <div id="errorMessage" style="opacity:.85"></div>
+              </div>
+            </div>
+          </div>
 
-            // Switch to results view
-            document.getElementById('centerView').classList.add('hidden');
-            document.getElementById('resultsView').classList.remove('hidden');
+          <!-- ══════════════════════════════════════
+               RESULTS CONTAINER — all cards live here
+          ══════════════════════════════════════ -->
+          <div id="resultsContainer" class="hidden space-y-5">
 
-            // Sync input fields
-            materialInput.value = materialName;
-            materialInputTop.value = materialName;
-
-            // Show loading state
-            document.getElementById('loadingState').classList.remove('hidden');
-            document.getElementById('resultsContainer').classList.add('hidden');
-            document.getElementById('errorState').classList.add('hidden');
-
-            try {
-                // Perform parallel searches for all properties
-                const searchPromises = PROPERTIES.map(prop => 
-                    searchProperty(materialName, prop.query)
-                );
-
-                const results = await Promise.all(searchPromises);
-
-                // Parse results
-                currentMaterial = {
-                    name: materialName,
-                    properties: PROPERTIES.map((prop, index) => ({
-                        ...prop,
-                        ...parseSearchResults(results[index], prop),
-                        rawResults: results[index]
-                    }))
-                };
-
-                displayResults();
-
-            } catch (error) {
-                console.error('Search error:', error);
-                showError('Search failed. Please check your API credentials and try again.');
-            } finally {
-                document.getElementById('loadingState').classList.add('hidden');
-            }
-        }
-
-        // ========== API CALL FUNCTION ==========
-        async function searchProperty(material, property) {
-            const query = `${material} ${property}`;
-            const url = `https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${SEARCH_ENGINE_ID}&q=${encodeURIComponent(query)}`;
-
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`API request failed: ${response.status}`);
-            }
-
-            const data = await response.json();
-            return data;
-        }
-
-        // ========== PARSING FUNCTION ==========
-        function parseSearchResults(data, property) {
-            if (!data.items || data.items.length === 0) {
-                return {
-                    value: 'Not found',
-                    unit: '',
-                    source: null,
-                    confidence: 'low'
-                };
-            }
-
-            // Scan through snippets to find matches
-            for (const item of data.items) {
-                const snippet = item.snippet || '';
-                
-                for (const pattern of property.patterns) {
-                    const matches = [...snippet.matchAll(pattern)];
-                    
-                    if (matches.length > 0) {
-                        const match = matches[0];
-                        return {
-                            value: match[1],
-                            unit: match[2] || '',
-                            source: item.link,
-                            sourceTitle: item.title,
-                            confidence: 'high'
-                        };
-                    }
-                }
-            }
-
-            // If no pattern matched, return the first result as a fallback
-            return {
-                value: 'Check source',
-                unit: '',
-                source: data.items[0].link,
-                sourceTitle: data.items[0].title,
-                confidence: 'low'
-            };
-        }
-
-        // ========== DISPLAY FUNCTION ==========
-        function displayResults() {
-            const resultsContainer = document.getElementById('resultsContainer');
-            const materialNameEl = document.getElementById('materialName');
-            const propertiesGrid = document.getElementById('propertiesGrid');
-
-            materialNameEl.textContent = currentMaterial.name;
-            propertiesGrid.innerHTML = '';
-
-            currentMaterial.properties.forEach(prop => {
-                const card = createPropertyCard(prop);
-                propertiesGrid.appendChild(card);
-            });
-
-            resultsContainer.classList.remove('hidden');
-            resultsContainer.classList.add('fade-in');
-        }
-
-        // ========== CREATE PROPERTY CARD ==========
-        function createPropertyCard(prop) {
-            const card = document.createElement('div');
-            const borderColor = {
-                blue: 'border-blue-500',
-                red: 'border-red-500',
-                green: 'border-green-500'
-            }[prop.color];
-
-            const bgColor = {
-                blue: 'bg-blue-500/10',
-                red: 'bg-red-500/10',
-                green: 'bg-green-500/10'
-            }[prop.color];
-
-            const hasData = prop.value !== 'Not found' && prop.value !== 'Check source';
-
-            card.className = `bg-gray-800 rounded-lg p-6 border-l-4 ${borderColor} ${bgColor}`;
-            card.innerHTML = `
-                <div class="text-3xl mb-2">${prop.icon}</div>
-                <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-2">${prop.name}</h3>
-                <div class="text-2xl font-bold mb-3">
-                    ${hasData ? `${prop.value} <span class="text-lg text-gray-400">${prop.unit}</span>` : `<span class="text-gray-500">${prop.value}</span>`}
+            <!-- 1. MATERIAL BANNER (symbol badge + name + structure badge) -->
+            <div class="bg-gray-800 rounded-lg border border-gray-700 p-5 flex items-center justify-between flex-wrap gap-4">
+              <div class="flex items-center gap-4">
+                <div class="symbol-badge">
+                  <span class="sym-atomic" id="badgeAtomicNum">—</span>
+                  <span class="sym-letter"  id="badgeSymbol">?</span>
+                  <span class="sym-weight"  id="badgeWeight">—</span>
                 </div>
-                ${prop.source ? `
-                    <a href="${prop.source}" target="_blank" class="text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1">
-                        📎 View Source
-                    </a>
-                    <div class="text-xs text-gray-500 mt-1 truncate" title="${prop.sourceTitle || ''}">
-                        ${prop.sourceTitle || ''}
-                    </div>
-                ` : ''}
-            `;
-
-            return card;
-        }
-
-        // ========== COMPARISON FUNCTIONS ==========
-        function addToComparison() {
-            if (!currentMaterial) return;
-
-            // Check if already in comparison
-            if (comparisonMaterials.some(m => m.name === currentMaterial.name)) {
-                showError('Material already in comparison list');
-                return;
-            }
-
-            comparisonMaterials.push({...currentMaterial});
-            updateComparisonList();
-        }
-
-        function updateComparisonList() {
-            const comparisonList = document.getElementById('comparisonList');
-
-            if (comparisonMaterials.length === 0) {
-                comparisonList.innerHTML = '<p class="text-gray-500 text-sm italic">No materials added yet</p>';
-                return;
-            }
-
-            comparisonList.innerHTML = comparisonMaterials.map((material, index) => `
-                <div class="bg-gray-700 rounded-lg p-4 relative">
-                    <button 
-                        onclick="removeFromComparison(${index})" 
-                        class="absolute top-2 right-2 text-gray-400 hover:text-red-400 text-xs"
-                    >
-                        ✕
-                    </button>
-                    <h4 class="font-bold text-sm mb-2 pr-6">${material.name}</h4>
-                    ${material.properties.map(prop => {
-                        const hasData = prop.value !== 'Not found' && prop.value !== 'Check source';
-                        return `
-                            <div class="text-xs text-gray-400 mb-1">
-                                ${prop.icon} <span class="font-semibold">${prop.name}:</span>
-                                <span class="${hasData ? 'text-white' : 'text-gray-500'}">
-                                    ${hasData ? `${prop.value} ${prop.unit}` : prop.value}
-                                </span>
-                            </div>
-                        `;
-                    }).join('')}
+                <div>
+                  <h2 class="text-4xl font-bold" style="font-family:var(--display)" id="materialName"></h2>
+                  <div style="font-family:var(--mono);font-size:.82rem;color:#a8c8f0;margin-top:.35rem;letter-spacing:.05em" id="materialMeta">—</div>
                 </div>
-            `).join('');
-        }
+              </div>
+              <div class="flex items-center gap-3 flex-wrap">
+                <span class="structure-badge" id="structureBadge">◈ —</span>
+                <button onclick="addToComparison()"
+                  class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg font-semibold transition-colors"
+                  style="font-family:var(--display);font-size:.65rem;letter-spacing:.08em">
+                  + COMPARE
+                </button>
+              </div>
+            </div>
 
-        function removeFromComparison(index) {
-            comparisonMaterials.splice(index, 1);
-            updateComparisonList();
-        }
+            <!-- 2. DEMO BANNER -->
+            <div id="demoBanner" class="demo-banner hidden">
+              <span class="demo-dot"></span>
+              <span><strong>DEMO MODE</strong> — Showing reference data. Add Google API credentials for live results.</span>
+            </div>
 
-        function clearComparison() {
-            comparisonMaterials = [];
-            updateComparisonList();
-        }
+            <!-- 3. ELEMENT INFO — 3 chips per row -->
+            <div class="section-heading">// ELEMENT INFO</div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="elementInfoGrid">
+              <!-- Chips injected by JS -->
+            </div>
 
-        // ========== ERROR HANDLING ==========
-        function showError(message) {
-            // Check if we're in center view or results view
-            const inCenterView = !document.getElementById('centerView').classList.contains('hidden');
-            
-            if (inCenterView) {
-                // Show error as alert in center view
-                alert(message);
-            } else {
-                // Show error in results view
-                const errorState = document.getElementById('errorState');
-                const errorMessage = document.getElementById('errorMessage');
-                errorMessage.textContent = message;
-                errorState.classList.remove('hidden');
-                
-                setTimeout(() => {
-                    errorState.classList.add('hidden');
-                }, 5000);
-            }
-        }
+            <!-- 4. PROPERTIES SECTION -->
+            <div class="section-heading">// PROPERTIES</div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="propertiesGrid">
+              <!-- Cards injected by JS -->
+            </div>
 
-        // ========== INITIALIZE ==========
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log('MatProp Real-Time initialized');
-            console.log('Please configure API_KEY and SEARCH_ENGINE_ID in the script section');
+            <!-- 5. VISUALS — Symbol image + Crystal structure -->
+            <div class="section-heading">// VISUALS — SYMBOL &amp; CRYSTAL STRUCTURE</div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+              <!-- Material symbol image
+                   IMAGE SWAP: replace src with apiData.images.symbol -->
+              <div class="vis-frame" style="height:150px">
+                <img id="symbolImg" src="" alt="Material Symbol" style="height:150px;object-fit:cover" />
+                <div class="img-caption" id="symbolImgCaption">MATERIAL SYMBOL · PLACEHOLDER</div>
+              </div>
+
+              <!-- Crystal structure image
+                   IMAGE SWAP: replace src with apiData.images.structure -->
+              <div class="flex flex-col gap-2">
+                <div class="vis-frame" style="height:118px">
+                  <img id="structureImg" src="" alt="Crystal Structure" style="height:118px;object-fit:cover" />
+                  <div class="img-caption" id="structureImgCaption">CRYSTAL STRUCTURE · PLACEHOLDER</div>
+                </div>
+                <span class="structure-badge" id="structureBadge2">◈ —</span>
+              </div>
+            </div>
+
+          </div>
+          <!-- /resultsContainer -->
+
+        </div>
+        <!-- /main col (lg:col-span-3) -->
+
+        <!-- ── RIGHT: COMPARISON SIDEBAR (1 col) ── -->
+        <div class="lg:col-span-1 space-y-5">
+          <div class="bg-gray-800 rounded-lg p-6 sticky top-4 border border-gray-700">
+            <h3 class="font-bold mb-1 flex items-center justify-between"
+              style="font-family:var(--display);font-size:.85rem;letter-spacing:.06em">
+              COMPARISON
+              <button onclick="clearComparison()"
+                class="text-xs bg-red-600/20 hover:bg-red-600/40 px-3 py-1 rounded transition-colors"
+                style="font-family:var(--mono);letter-spacing:.05em">CLEAR</button>
+            </h3>
+            <div class="label-mono mb-4">// MATERIAL LIST</div>
+            <div id="comparisonList" class="space-y-3">
+              <p style="font-family:var(--mono);font-size:.62rem;color:#3e6a9e">No materials added yet</p>
+            </div>
+          </div>
+
+          <!-- Bohr model image — below comparison card
+               IMAGE SWAP: replace src with apiData.bohrModelImg -->
+          <div id="bohrSection" class="hidden">
+            <div class="section-heading mb-3">// BOHR MODEL</div>
+            <div class="vis-frame">
+              <img id="bohrModelImg" src="" alt="Bohr Model"
+                style="width:100%;height:280px;object-fit:contain;background:#080c14;padding:12px" />
+              <div class="img-caption" id="bohrModelCaption">BOHR MODEL · ELECTRON CONFIGURATION</div>
+            </div>
+          </div>
+
+        </div>
+        <!-- /sidebar -->
+
+      </div>
+      <!-- /grid -->
+    </div>
+  </div>
+
+  <script>
+    // ===== CONFIG =====
+    const API_KEY          = 'YOUR_GOOGLE_API_KEY_HERE';
+    const SEARCH_ENGINE_ID = 'YOUR_SEARCH_ENGINE_ID_HERE';
+
+    let currentMaterial     = null;
+    let comparisonMaterials = [];
+
+    // ===== DEMO DATA =====
+    const DEMO_DATA = {
+      iron: {
+        name: 'Iron', _demo: true,
+        appearance:     'Lustrous metallic grey',
+        discoveredBy:   'Known since ancient times',
+        namedBy:        'Anglo-Saxon: "iren"',
+        period:         '4',
+        group:          '8',
+        phase:          'Solid',
+        electronConfig: '[Ar] 3d⁶ 4s²',
+        bohrModelImg:   'https://sciencenotes.org/wp-content/uploads/2021/10/Iron-Bohr-Model.png',
+        properties: [
+          { name:'Density',             icon:'⚖️', color:'blue',   value:'7874', unit:'kg/m³', source:'https://www.engineeringtoolbox.com/density-materials-d_1652.html', sourceTitle:'Engineering Toolbox — Density', confidence:'high' },
+          { name:'Melting Point',        icon:'🔥', color:'red',    value:'1538', unit:'°C',    source:'https://www.periodic-table.org/Iron/', sourceTitle:'Periodic Table — Iron', confidence:'high' },
+          { name:'Boiling Point',        icon:'💨', color:'orange', value:'2862', unit:'°C',    source:'https://www.periodic-table.org/Iron/', sourceTitle:'Periodic Table — Iron', confidence:'high' },
+          { name:'Thermal Conductivity', icon:'🌡️', color:'green',  value:'80.4', unit:'W/m·K', source:'https://www.engineeringtoolbox.com/thermal-conductivity-d_429.html', sourceTitle:'Engineering Toolbox — Thermal Conductivity', confidence:'high' },
+          { name:"Young's Modulus",      icon:'📐', color:'purple', value:'211',  unit:'GPa',   source:'https://www.azom.com/article.aspx?ArticleID=1547', sourceTitle:'AZoM — Iron Mechanical Properties', confidence:'high' },
+        ]
+      },
+      copper: {
+        name: 'Copper', _demo: true,
+        appearance:     'Reddish-orange lustrous metal',
+        discoveredBy:   'Middle East civilizations (~9000 BC)',
+        namedBy:        'Latin: "Cuprum" (Cyprus island)',
+        period:         '4',
+        group:          '11',
+        phase:          'Solid',
+        electronConfig: '[Ar] 3d¹⁰ 4s¹',
+        bohrModelImg:   'https://sciencenotes.org/wp-content/uploads/2021/10/Copper-Bohr-Model.png',
+        properties: [
+          { name:'Density',             icon:'⚖️', color:'blue',   value:'8960', unit:'kg/m³', source:'https://www.engineeringtoolbox.com/density-materials-d_1652.html', sourceTitle:'Engineering Toolbox — Density', confidence:'high' },
+          { name:'Melting Point',        icon:'🔥', color:'red',    value:'1085', unit:'°C',    source:'https://www.periodic-table.org/Copper/', sourceTitle:'Periodic Table — Copper', confidence:'high' },
+          { name:'Boiling Point',        icon:'💨', color:'orange', value:'2562', unit:'°C',    source:'https://www.periodic-table.org/Copper/', sourceTitle:'Periodic Table — Copper', confidence:'high' },
+          { name:'Thermal Conductivity', icon:'🌡️', color:'green',  value:'401',  unit:'W/m·K', source:'https://www.engineeringtoolbox.com/thermal-conductivity-d_429.html', sourceTitle:'Engineering Toolbox — Thermal Conductivity', confidence:'high' },
+          { name:"Young's Modulus",      icon:'📐', color:'purple', value:'120',  unit:'GPa',   source:'https://www.azom.com/article.aspx?ArticleID=2856', sourceTitle:'AZoM — Copper Mechanical Properties', confidence:'high' },
+        ]
+      }
+    };
+
+    // ===== MATERIAL META (badge + structure) =====
+    const MATERIAL_META = {
+      iron:      { symbol:'Fe',   atomicNum:26,  weight:'55.85',  structure:'BCC',     structLabel:'BCC — Body-Centered Cubic',    class:'Transition Metal'  },
+      copper:    { symbol:'Cu',   atomicNum:29,  weight:'63.55',  structure:'FCC',     structLabel:'FCC — Face-Centered Cubic',    class:'Transition Metal'  },
+      aluminum:  { symbol:'Al',   atomicNum:13,  weight:'26.98',  structure:'FCC',     structLabel:'FCC — Face-Centered Cubic',    class:'Post-Trans. Metal' },
+      aluminium: { symbol:'Al',   atomicNum:13,  weight:'26.98',  structure:'FCC',     structLabel:'FCC — Face-Centered Cubic',    class:'Post-Trans. Metal' },
+      titanium:  { symbol:'Ti',   atomicNum:22,  weight:'47.87',  structure:'HCP',     structLabel:'HCP — Hexagonal Close-Packed', class:'Transition Metal'  },
+      steel:     { symbol:'Fe+C', atomicNum:'—', weight:'~55.9',  structure:'BCC/FCC', structLabel:'BCC/FCC — Phase Dependent',    class:'Ferrous Alloy'     },
+      gold:      { symbol:'Au',   atomicNum:79,  weight:'196.97', structure:'FCC',     structLabel:'FCC — Face-Centered Cubic',    class:'Transition Metal'  },
+      silver:    { symbol:'Ag',   atomicNum:47,  weight:'107.87', structure:'FCC',     structLabel:'FCC — Face-Centered Cubic',    class:'Transition Metal'  },
+      nickel:    { symbol:'Ni',   atomicNum:28,  weight:'58.69',  structure:'FCC',     structLabel:'FCC — Face-Centered Cubic',    class:'Transition Metal'  },
+      tungsten:  { symbol:'W',    atomicNum:74,  weight:'183.84', structure:'BCC',     structLabel:'BCC — Body-Centered Cubic',    class:'Transition Metal'  },
+      graphene:  { symbol:'C',    atomicNum:6,   weight:'12.01',  structure:'2D Hex',  structLabel:'2D Hexagonal Lattice',         class:'Carbon Allotrope'  },
+      silicon:   { symbol:'Si',   atomicNum:14,  weight:'28.09',  structure:'DC',      structLabel:'Diamond Cubic',                class:'Metalloid'         },
+      magnesium: { symbol:'Mg',   atomicNum:12,  weight:'24.31',  structure:'HCP',     structLabel:'HCP — Hexagonal Close-Packed', class:'Alkaline Earth'    },
+      zinc:      { symbol:'Zn',   atomicNum:30,  weight:'65.38',  structure:'HCP',     structLabel:'HCP — Hexagonal Close-Packed', class:'Transition Metal'  },
+      lead:      { symbol:'Pb',   atomicNum:82,  weight:'207.2',  structure:'FCC',     structLabel:'FCC — Face-Centered Cubic',    class:'Post-Trans. Metal' },
+    };
+
+    // ===== BAR MAX VALUES =====
+    const BAR_MAX = {
+      'Density': 20000, 'Melting Point': 3500, 'Boiling Point': 5700,
+      'Thermal Conductivity': 500, "Young's Modulus": 1000,
+    };
+
+    // ===== PROPERTY DEFINITIONS =====
+    const PROPERTIES = [
+      {
+        name:'Density', query:'density', icon:'⚖️', color:'blue',
+        patterns: [/(\d+\.?\d*)\s*(g\/cm³|g\/cc|kg\/m³|g\/ml)/gi, /density[:\s]+(\d+\.?\d*)\s*(g\/cm³|g\/cc|kg\/m³|g\/ml)/gi]
+      },
+      {
+        name:'Melting Point', query:'melting point', icon:'🔥', color:'red',
+        patterns: [/(\d+\.?\d*)\s*(°C|°F|K|celsius|fahrenheit)/gi, /melting point[:\s]+(\d+\.?\d*)\s*(°C|°F|K)/gi, /melts at[:\s]+(\d+\.?\d*)\s*(°C|°F|K)/gi]
+      },
+      {
+        name:'Boiling Point', query:'boiling point temperature', icon:'💨', color:'orange',
+        patterns: [/boiling point[:\s]+(\d+\.?\d*)\s*(°C|°F|K)/gi, /boils at[:\s]+(\d+\.?\d*)\s*(°C|°F|K)/gi, /(\d{3,4}\.?\d*)\s*(°C|K)/gi]
+      },
+      {
+        name:'Thermal Conductivity', query:'thermal conductivity', icon:'🌡️', color:'green',
+        patterns: [/(\d+\.?\d*)\s*(W\/m·K|W\/mK|W\/m-K|W\/(m·K)|W\/(m K))/gi, /thermal conductivity[:\s]+(\d+\.?\d*)\s*(W\/m·K|W\/mK)/gi]
+      },
+      {
+        name:"Young's Modulus", query:"Young's modulus elastic modulus stiffness", icon:'📐', color:'purple',
+        patterns: [/young[''\u2019]?s modulus[:\s]+(\d+\.?\d*)\s*(GPa|MPa|psi)/gi, /elastic modulus[:\s]+(\d+\.?\d*)\s*(GPa|MPa)/gi, /(\d+\.?\d*)\s*(GPa)/gi]
+      },
+    ];
+
+    // ===== QUICK SEARCH =====
+    function quickSearch(name) {
+      document.getElementById('materialInput').value = name;
+      const top = document.getElementById('materialInputTop');
+      if (top) top.value = name;
+      searchMaterial();
+    }
+
+    // ===== SEARCH =====
+    async function searchMaterial() {
+      const inp    = document.getElementById('materialInput');
+      const inpTop = document.getElementById('materialInputTop');
+      const name   = (inp?.value || '').trim() || (inpTop?.value || '').trim();
+      if (!name) { showError('Please enter a material name'); return; }
+
+      // Check demo data first
+      const demoKey = name.toLowerCase().replace(/\s+/g,'');
+      if (DEMO_DATA[demoKey]) {
+        document.getElementById('centerView').classList.add('hidden');
+        document.getElementById('resultsView').classList.remove('hidden');
+        if (inp) inp.value = name;
+        if (inpTop) inpTop.value = name;
+        currentMaterial = DEMO_DATA[demoKey];
+        displayResults();
+        return;
+      }
+
+      if (API_KEY === 'YOUR_GOOGLE_API_KEY_HERE' || SEARCH_ENGINE_ID === 'YOUR_SEARCH_ENGINE_ID_HERE') {
+        showError('Please configure your Google Custom Search API credentials in the code');
+        return;
+      }
+
+      document.getElementById('centerView').classList.add('hidden');
+      document.getElementById('resultsView').classList.remove('hidden');
+      if (inp) inp.value = name;
+      if (inpTop) inpTop.value = name;
+
+      document.getElementById('loadingState').classList.remove('hidden');
+      document.getElementById('resultsContainer').classList.add('hidden');
+      document.getElementById('errorState').classList.add('hidden');
+
+      try {
+        const results = await Promise.all(PROPERTIES.map(p => searchProperty(name, p.query)));
+        currentMaterial = {
+          name,
+          properties: PROPERTIES.map((p, i) => ({ ...p, ...parseSearchResults(results[i], p), rawResults: results[i] }))
+        };
+        displayResults();
+      } catch (err) {
+        console.error(err);
+        showError('Search failed. Please check your API credentials and try again.');
+      } finally {
+        document.getElementById('loadingState').classList.add('hidden');
+      }
+    }
+
+    // ===== API CALL =====
+    async function searchProperty(material, property) {
+      const url = `https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${SEARCH_ENGINE_ID}&q=${encodeURIComponent(material + ' ' + property)}`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`API error ${res.status}`);
+      return res.json();
+    }
+
+    // ===== PARSE =====
+    function parseSearchResults(data, property) {
+      if (!data.items?.length) return { value:'Not found', unit:'', source:null, confidence:'low' };
+      for (const item of data.items) {
+        const snippet = item.snippet || '';
+        for (const pattern of property.patterns) {
+          const matches = [...snippet.matchAll(pattern)];
+          if (matches.length) {
+            const m = matches[0];
+            return { value:m[1], unit:m[2]||'', source:item.link, sourceTitle:item.title, confidence:'high' };
+          }
+        }
+      }
+      return { value:'Check source', unit:'', source:data.items[0].link, sourceTitle:data.items[0].title, confidence:'low' };
+    }
+
+    // ===== DISPLAY RESULTS =====
+    function displayResults() {
+      const key  = currentMaterial.name.toLowerCase().replace(/\s+/g,'');
+      const meta = MATERIAL_META[key] || Object.entries(MATERIAL_META).find(([k]) => key.includes(k))?.[1] || null;
+
+      // Symbol badge
+      document.getElementById('materialName').textContent   = currentMaterial.name;
+      document.getElementById('badgeAtomicNum').textContent = meta ? meta.atomicNum : '—';
+      document.getElementById('badgeSymbol').textContent    = meta ? meta.symbol : currentMaterial.name.slice(0,2).toUpperCase();
+      document.getElementById('badgeWeight').textContent    = meta ? meta.weight : '—';
+      document.getElementById('materialMeta').textContent   = meta
+        ? `${meta.class}  ·  Atomic: ${meta.atomicNum}  ·  Wt: ${meta.weight}`
+        : 'No classification data for this material';
+
+      // Structure badges
+      const structText = meta ? `◈ ${meta.structLabel}` : '◈ Structure Unknown';
+      document.getElementById('structureBadge').textContent  = structText;
+      document.getElementById('structureBadge2').textContent = structText;
+
+      // Visuals
+      // IMAGE SWAP: replace these .src lines with apiData.images.symbol / apiData.images.structure
+      const sym   = meta ? meta.symbol : currentMaterial.name.slice(0,2).toUpperCase();
+      const stype = meta ? meta.structure : 'Unknown';
+      document.getElementById('symbolImg').src    = `https://placehold.co/600x150/0d1524/3b9eff?text=${encodeURIComponent(sym + ' \u2014 ' + currentMaterial.name)}&font=raleway`;
+      document.getElementById('structureImg').src = `https://placehold.co/600x118/0d1524/f5a623?text=${encodeURIComponent(stype + ' Crystal Structure')}&font=raleway`;
+      document.getElementById('symbolImgCaption').textContent    = `${sym} — ${currentMaterial.name.toUpperCase()} · MATERIAL SYMBOL`;
+      document.getElementById('structureImgCaption').textContent = `${stype} · CRYSTAL LATTICE`;
+
+      // Element info chips
+      // IMAGE SWAP (Bohr model): replace bohrModelImg below with apiData.bohrModelImg
+      const infoFields = [
+        { label:'APPEARANCE',      key:'appearance'     },
+        { label:'DISCOVERED BY',   key:'discoveredBy'   },
+        { label:'NAMED BY',        key:'namedBy'        },
+        { label:'PERIOD',          key:'period'         },
+        { label:'GROUP',           key:'group'          },
+        { label:'PHASE',           key:'phase'          },
+        { label:'ELECTRON CONFIG', key:'electronConfig' },
+      ];
+      const infoGrid = document.getElementById('elementInfoGrid');
+      if (infoGrid) {
+        infoGrid.innerHTML = infoFields.map(f => `
+          <div class="info-chip">
+            <div class="chip-label">${f.label}</div>
+            <div class="chip-value">${currentMaterial[f.key] || '—'}</div>
+          </div>
+        `).join('');
+      }
+
+      const bohrImg = document.getElementById('bohrModelImg');
+      if (bohrImg) {
+        bohrImg.src = currentMaterial.bohrModelImg || `https://placehold.co/300x280/080c14/f5a623?text=Bohr+Model&font=raleway`;
+        document.getElementById('bohrModelCaption').textContent =
+          `${currentMaterial.name.toUpperCase()} · ELECTRON CONFIG: ${currentMaterial.electronConfig || '—'}`;
+        document.getElementById('bohrSection').classList.remove('hidden');
+      }
+
+      // Properties grid
+      const grid = document.getElementById('propertiesGrid');
+      grid.innerHTML = '';
+      currentMaterial.properties.forEach(p => grid.appendChild(createPropertyCard(p)));
+
+      // Demo banner
+      const demoBanner = document.getElementById('demoBanner');
+      currentMaterial._demo ? demoBanner.classList.remove('hidden') : demoBanner.classList.add('hidden');
+
+      // Show container
+      const container = document.getElementById('resultsContainer');
+      container.classList.remove('hidden');
+      container.classList.add('fade-in');
+
+      // Animate bars
+      requestAnimationFrame(() => {
+        document.querySelectorAll('.prop-bar-fill').forEach(bar => {
+          setTimeout(() => { bar.style.width = bar.dataset.pct + '%'; }, 120);
         });
-    </script>
+      });
+    }
+
+    // ===== PROPERTY CARD =====
+    function createPropertyCard(prop) {
+      const card = document.createElement('div');
+      const borders = { blue:'border-blue-500', red:'border-red-500', orange:'border-orange-500', green:'border-green-500', purple:'border-purple-500' };
+      const bgs     = { blue:'bg-blue-500/10',  red:'bg-red-500/10',  orange:'bg-orange-500/10',  green:'bg-green-500/10',  purple:'bg-purple-500/10'  };
+      const hasData = prop.value !== 'Not found' && prop.value !== 'Check source';
+
+      let barPct = 0;
+      if (hasData) {
+        const maxVal = BAR_MAX[prop.name] || 1000;
+        const raw    = parseFloat(String(prop.value).replace(/[^0-9.]/g,''));
+        if (!isNaN(raw)) barPct = Math.min(Math.round((raw / maxVal) * 100), 100);
+      }
+
+      card.className = `prop-card rounded-lg p-6 border-l-4 ${borders[prop.color]||'border-gray-500'} border border-gray-600`;
+      card.style.background = '#1a2a3f';
+      card.innerHTML = `
+        <div style="font-size:2rem;margin-bottom:.5rem">${prop.icon}</div>
+        <div style="font-family:var(--mono);font-size:.82rem;letter-spacing:.15em;color:#93c5fd;text-transform:uppercase;margin-bottom:.5rem;font-weight:600">${prop.name}</div>
+        <div style="font-family:var(--display);font-size:1.75rem;font-weight:900;line-height:1.1;margin-bottom:.25rem">
+          ${hasData
+            ? `<span style="color:#ffffff">${prop.value}</span>
+               <span style="font-size:1rem;color:#7dd3fc;font-family:var(--mono);font-weight:400"> ${prop.unit}</span>`
+            : `<span style="color:#94a3b8;font-size:1rem;font-family:var(--mono)">Not found</span>`}
+        </div>
+        <div class="prop-bar-track">
+          <div class="prop-bar-fill" data-pct="${barPct}" style="width:0%"></div>
+        </div>
+        ${prop.source ? `
+          <a href="${prop.source}" target="_blank" style="font-family:var(--mono);font-size:.72rem;color:#60a5fa;display:flex;align-items:center;gap:4px;margin-top:.75rem;text-decoration:none">📎 View Source</a>
+          <div style="font-family:var(--mono);font-size:.65rem;color:#94a3b8;margin-top:.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${prop.sourceTitle||''}">${prop.sourceTitle||''}</div>
+        ` : ''}
+      `;
+      return card;
+    }
+
+    // ===== COMPARISON =====
+    function addToComparison() {
+      if (!currentMaterial) return;
+      if (comparisonMaterials.some(m => m.name === currentMaterial.name)) { showError('Material already in comparison list'); return; }
+      comparisonMaterials.push({...currentMaterial});
+      updateComparisonList();
+    }
+
+    function updateComparisonList() {
+      const list = document.getElementById('comparisonList');
+      if (!comparisonMaterials.length) {
+        list.innerHTML = '<p style="font-family:var(--mono);font-size:.62rem;color:#3e6a9e">No materials added yet</p>';
+        return;
+      }
+      list.innerHTML = comparisonMaterials.map((mat, idx) => `
+        <div class="bg-gray-700 rounded-lg p-4 relative border border-gray-600">
+          <button onclick="removeFromComparison(${idx})" class="absolute top-2 right-2 text-gray-400 hover:text-red-400" style="font-family:var(--mono);font-size:.8rem">✕</button>
+          <h4 class="font-bold pr-6 mb-2" style="font-family:var(--display);font-size:.8rem;letter-spacing:.05em;color:#e0f2fe">${mat.name}</h4>
+          ${mat.properties.map(p => {
+            const ok = p.value !== 'Not found' && p.value !== 'Check source';
+            return `<div class="mb-1" style="font-family:var(--mono);font-size:.72rem;color:#a8c8f0">
+              ${p.icon} <span style="font-weight:700">${p.name}:</span>
+              <span style="color:${ok?'#fff':'#3e6a9e'}">${ok?`${p.value} ${p.unit}`:p.value}</span>
+            </div>`;
+          }).join('')}
+        </div>
+      `).join('');
+    }
+
+    function removeFromComparison(index) { comparisonMaterials.splice(index, 1); updateComparisonList(); }
+    function clearComparison() { comparisonMaterials = []; updateComparisonList(); }
+
+    // ===== ERROR =====
+    function showError(message) {
+      const inCenter = !document.getElementById('centerView').classList.contains('hidden');
+      if (inCenter) {
+        alert(message);
+      } else {
+        const el = document.getElementById('errorState');
+        document.getElementById('errorMessage').textContent = message;
+        el.classList.remove('hidden');
+        setTimeout(() => el.classList.add('hidden'), 6000);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('MatProp Real-Time initialized');
+    });
+  </script>
 </body>
 </html>
