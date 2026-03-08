@@ -7,7 +7,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
-  <script src="materials.js"></script>
   <style>
     :root {
       --accent:        #3b9eff;
@@ -63,7 +62,6 @@
     .center-mode { display:flex; align-items:center; justify-content:center; min-height:100vh; }
     .center-mode .search-container { max-width:640px; width:100%; }
 
-    /* Quick tags */
     .quick-tag {
       font-family: var(--mono);
       font-size: .78rem;
@@ -78,11 +76,9 @@
     }
     .quick-tag:hover { border-color:var(--accent); color:var(--accent); background:rgba(59,158,255,.07); }
 
-    /* Property bars */
     .prop-bar-track { height:4px; background:var(--border); border-radius:2px; overflow:hidden; margin-top:10px; }
     .prop-bar-fill  { height:100%; border-radius:2px; background:linear-gradient(90deg,var(--accent-dim),var(--accent)); width:0%; transition:width .9s cubic-bezier(.25,.8,.25,1); }
 
-    /* Symbol badge */
     .symbol-badge {
       width:90px; height:90px;
       background: linear-gradient(135deg, var(--accent-dim), #080c14);
@@ -96,7 +92,6 @@
     .symbol-badge .sym-letter { font-family:var(--display); font-size:2.2rem; font-weight:900; color:#fff; line-height:1; }
     .symbol-badge .sym-weight { font-family:var(--mono); font-size:.65rem; color:#7ba5d6; line-height:1.4; }
 
-    /* Crystal badge */
     .structure-badge {
       display:inline-flex; align-items:center; gap:.4rem;
       font-family:var(--mono); font-size:.78rem;
@@ -104,7 +99,6 @@
       border-radius:3px; padding:.3rem .85rem;
     }
 
-    /* Image frame */
     .vis-frame { border:1px solid var(--border); border-radius:6px; overflow:hidden; background:#080c14; position:relative; }
     .vis-frame img { width:100%; display:block; object-fit:cover; transition:transform .4s ease; }
     .vis-frame:hover img { transform:scale(1.04); }
@@ -115,17 +109,14 @@
       font-family:var(--mono); font-size:.68rem; color:#a8c8f0; letter-spacing:.08em;
     }
 
-    /* Status dot */
     .status-dot { display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--green); box-shadow:0 0 7px var(--green); animation:pulse 2s ease-in-out infinite; flex-shrink:0; }
 
-    /* Error banner */
     .error-banner {
       background:rgba(255,77,106,.07); border-left:3px solid var(--red); border-radius:4px;
       padding:1rem 1.4rem; font-family:var(--mono); font-size:.9rem; color:var(--red);
       letter-spacing:.03em; display:flex; align-items:flex-start; gap:.7rem;
     }
 
-    /* Demo banner */
     .demo-banner {
       background:rgba(0,229,160,.06); border:1px solid rgba(0,229,160,.3); border-left:3px solid var(--green);
       border-radius:4px; padding:.85rem 1.25rem; font-family:var(--mono); font-size:.82rem;
@@ -133,17 +124,14 @@
     }
     .demo-banner .demo-dot { width:8px; height:8px; border-radius:50%; background:var(--green); box-shadow:0 0 7px var(--green); flex-shrink:0; animation:pulse 1.8s ease-in-out infinite; }
 
-    /* Info chip */
     .info-chip { background:#1a2a3f; border:1px solid #2a5a8f; border-left:4px solid var(--accent); border-radius:10px; padding:1.4rem 1.5rem; transition: box-shadow .2s, border-color .2s; }
     .info-chip:hover { box-shadow:0 0 22px rgba(59,158,255,.22); border-color:#60b8ff; }
     .info-chip .chip-label { font-family:var(--mono); font-size:.9rem; color:#7dd3fc; letter-spacing:.12em; text-transform:uppercase; margin-bottom:.6rem; font-weight:700; }
     .info-chip .chip-value { font-family:var(--ui); font-size:1.35rem; font-weight:700; color:#ffffff; word-break:break-word; line-height:1.4; }
 
-    /* Property card */
     .prop-card { transition:border-color .2s, box-shadow .2s; }
     .prop-card:hover { box-shadow:0 0 20px rgba(59,158,255,.15); }
 
-    /* Section heading */
     .section-heading {
       font-family:var(--mono); font-size:1rem; letter-spacing:.2em;
       color:#60b8ff; text-transform:uppercase; font-weight:700;
@@ -151,17 +139,14 @@
       padding: .3rem .25rem;
     }
 
-    /* Label mono */
     .label-mono { font-family:var(--mono); font-size:.72rem; letter-spacing:.15em; color:#7ba5d6; text-transform:uppercase; }
   </style>
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen">
 
- 
   <div id="centerView" class="center-mode px-4">
     <div class="search-container">
       <div class="text-center mb-8">
-        <!-- <div class="label-mono mb-2">// MATERIAL DATABASE v2.4.1</div> -->
         <h1 class="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent mb-1" style="font-family:var(--display)">MatProp</h1>
         <div class="text-xl tracking-widest text-blue-300 mb-2" style="font-family:var(--display)">REAL-TIME</div>
         <p class="text-gray-400 text-base">Instant Material Property/Info Lookup</p>
@@ -183,7 +168,6 @@
             SEARCH PROPERTIES
           </button>
         </div>
-        <!-- Quick tags -->
         <div class="mt-4 flex flex-wrap gap-2 items-center">
           <span style="font-family:var(--mono);font-size:.6rem;color:#3e6a9e;letter-spacing:.1em">QUICK:</span>
           <button class="quick-tag" onclick="quickSearch('Iron')">Iron</button>
@@ -195,21 +179,14 @@
         </div>
         <div class="mt-4 flex items-center gap-2">
           <span class="status-dot"></span>
-          <!-- <span style="font-family:var(--mono);font-size:.62rem;color:#3e6a9e;letter-spacing:.08em">Configure Google API credentials — API_KEY &amp; SEARCH_ENGINE_ID</span> -->
         </div>
       </div>
     </div>
   </div>
 
-  
-
-
-
-
   <div id="resultsView" class="hidden">
     <div class="container mx-auto px-4 py-8 max-w-7xl">
 
-      <!-- Top header + search bar -->
       <div class="text-center mb-6">
         <h1 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent mb-4" style="font-family:var(--display)">
           MatProp <span class="text-2xl">Real-Time</span>
@@ -229,7 +206,7 @@
               style="font-family:var(--display);font-size:.7rem">SEARCH</button>
           </div>
           <div class="mt-3 flex flex-wrap gap-2 items-center justify-center">
-            <span style="font-family:var(--mono);font: size 0.18em;color:#3e6a9e">QUICK:</span>
+            <span style="font-family:var(--mono);font-size:.6rem;color:#3e6a9e">QUICK:</span>
             <button class="quick-tag" onclick="quickSearch('Iron')">Iron</button>
             <button class="quick-tag" onclick="quickSearch('Copper')">Copper</button>
             <button class="quick-tag" onclick="quickSearch('Aluminum')">Aluminum</button>
@@ -240,19 +217,15 @@
         </div>
       </div>
 
-      <!-- Main layout: 3-col content + 1-col sidebar -->
       <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
 
-        <!-- ── LEFT: MAIN CONTENT (3 cols) ── -->
         <div class="lg:col-span-3 space-y-5">
 
-          <!-- Loading -->
           <div id="loadingState" class="hidden bg-gray-800 rounded-lg p-12 text-center border border-gray-700">
             <div class="spinner w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
             <p style="font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;color:#9ca3af">QUERYING MATERIAL DATABASE…</p>
           </div>
 
-          <!-- Error -->
           <div id="errorState" class="hidden">
             <div class="error-banner">
               <span style="flex-shrink:0;margin-top:1px">⚠</span>
@@ -263,12 +236,8 @@
             </div>
           </div>
 
-         
-
-
           <div id="resultsContainer" class="hidden space-y-5">
 
-            <!-- 1. MATERIAL BANNER (symbol badge + name + structure badge) -->
             <div class="bg-gray-800 rounded-lg border border-gray-700 p-5 flex items-center justify-between flex-wrap gap-4">
               <div class="flex items-center gap-4">
                 <div class="symbol-badge">
@@ -291,37 +260,23 @@
               </div>
             </div>
 
-            <!-- 2. DEMO BANNER -->
             <div id="demoBanner" class="demo-banner hidden">
               <span class="demo-dot"></span>
               <span><strong></strong></span>
             </div>
 
-            <!-- 3. ELEMENT INFO — 3 chips per row -->
             <div class="section-heading">// ELEMENT INFO</div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="elementInfoGrid">
-              <!-- Chips injected by JS -->
-            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="elementInfoGrid"></div>
 
-            <!-- 4. PROPERTIES SECTION -->
             <div class="section-heading">// PROPERTIES</div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="propertiesGrid">
-              <!-- Cards injected by JS -->
-            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="propertiesGrid"></div>
 
-            <!-- 5. VISUALS — Symbol image + Crystal structure -->
             <div class="section-heading">// VISUALS — SYMBOL &amp; CRYSTAL STRUCTURE</div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-              <!-- Material symbol image
-                   IMAGE SWAP: replace src with apiData.images.symbol -->
               <div class="vis-frame" style="height:150px">
                 <img id="symbolImg" src="" alt="Material Symbol" style="height:150px;object-fit:cover" />
                 <div class="img-caption" id="symbolImgCaption">MATERIAL SYMBOL · PLACEHOLDER</div>
               </div>
-
-              <!-- Crystal structure image
-                   IMAGE SWAP: replace src with apiData.images.structure -->
               <div class="flex flex-col gap-2">
                 <div class="vis-frame" style="height:118px">
                   <img id="structureImg" src="" alt="Crystal Structure" style="height:118px;object-fit:cover" />
@@ -332,12 +287,9 @@
             </div>
 
           </div>
-  
 
         </div>
-    
 
-        <!-- ── RIGHT: COMPARISON SIDEBAR (1 col) ── -->
         <div class="lg:col-span-1 space-y-5">
           <div class="bg-gray-800 rounded-lg p-6 sticky top-4 border border-gray-700">
             <h3 class="font-bold mb-1 flex items-center justify-between"
@@ -353,8 +305,6 @@
             </div>
           </div>
 
-          <!-- Bohr model image — below comparison card
-               IMAGE SWAP: replace src with apiData.bohrModelImg -->
           <div id="bohrSection" class="hidden">
             <div class="section-heading mb-3">// BOHR MODEL</div>
             <div class="vis-frame">
@@ -365,74 +315,26 @@
           </div>
 
         </div>
-        <!-- /sidebar -->
 
       </div>
-      <!-- /grid -->
     </div>
   </div>
 
   <script>
-   let currentMaterial     = null;
+  let currentMaterial     = null;
   let comparisonMaterials = [];
 
-  // ── Bar fill max values (used to draw the % bar on each property card)
   const BAR_MAX = {
-    'Density':             25,    // g/cm³   — osmium is ~22.6
-    'Melting Point':       3500,  // °C      — tungsten is ~3422
-    'Boiling Point':       5700,  // °C      — tungsten is ~5555
-
+    'Density':       25,
+    'Melting Point': 3500,
+    'Boiling Point': 5700,
   };
 
-  // ════════════════════════════════════════════════════════════════════
-  //  DATA CONTRACT
-  //  Every material object — whether from demo data OR the live API —
-  //  must have exactly these fields. displayResults() reads ONLY these.
-  //
-  //  {
-  //    name:           string   — "Iron"
-  //    _demo:          bool     — true only for DEMO_DATA entries
-  //
-  //    // ── HEADER BADGE ─────────────────────────────────────────────
-  //    symbol:         string   — "Fe"
-  //    atomicNumber:   string   — "26"
-  //    atomicWeight:   string   — "55.845"
-  //    category:       string   — "Transition Metal"
-  //
-  //    // ── ELEMENT INFO CHIPS ────────────────────────────────────────
-  //    appearance:     string   — "Lustrous metallic grey"
-  //    discoveredBy:   string   — "Known since ancient times"
-  //    namedBy:        string   — "Anglo-Saxon: iren"
-  //    period:         string   — "4"
-  //    group:          string   — "8"
-  //    phase:          string   — "Solid"
-  //    electronConfig: string   — "[Ar] 3d⁶ 4s²"
-  //
-  //    // ── VISUALS ───────────────────────────────────────────────────
-  //    structure:      string   — "BCC"
-  //    structLabel:    string   — "BCC — Body-Centered Cubic"
-  //    symbolImg:      string   — URL to element image
-  //    structureImg:   string   — URL to crystal structure image
-  //    bohrModelImg:   string   — URL to Bohr model image
-  //
-  //    // ── PROPERTY CARDS ────────────────────────────────────────────
-  //    properties: [
-  //      { name, icon, color, value, unit, source, sourceTitle }
-  //    ]
-  //  }
-  // ════════════════════════════════════════════════════════════════════
-
-  // ── DEMO DATA ────────────────────────────────────────────────────────
-  // These two entries work instantly without any network call.
-  // They follow the exact same data contract above.
-  // Add more elements here the same way to expand offline coverage.
   const DEMO_DATA = {
     iron: {
       name: 'Iron',  _demo: true,
-      // Header badge
       symbol: 'Fe',  atomicNumber: '26',  atomicWeight: '55.845',
       category: 'Transition Metal',
-      // Element info chips
       appearance:     'Lustrous metallic grey',
       discoveredBy:   'Known since ancient times',
       namedBy:        'Anglo-Saxon: "iren"',
@@ -440,17 +342,15 @@
       group:          '8',
       phase:          'Solid',
       electronConfig: '[Ar] 3d⁶ 4s²',
-      // Visuals
       structure:    'BCC',
       structLabel:  'BCC — Body-Centered Cubic',
       symbolImg:    'https://images-of-elements.com/iron.jpg',
       structureImg: '',
       bohrModelImg: 'https://sciencenotes.org/wp-content/uploads/2021/10/Iron-Bohr-Model.png',
-      // Property cards
       properties: [
-        { name:'Density',             icon:'⚖️', color:'blue',   value:'7.874', unit:'g/cm³',  source:'https://periodic-table.io/fe', sourceTitle:'Periodic Table — Iron' },
-        { name:'Melting Point',        icon:'🔥', color:'red',    value:'1538',  unit:'°C',     source:'https://periodic-table.io/fe', sourceTitle:'Periodic Table — Iron' },
-        { name:'Boiling Point',        icon:'💨', color:'orange', value:'2862',  unit:'°C',     source:'https://periodic-table.io/fe', sourceTitle:'Periodic Table — Iron' },
+        { name:'Density',      icon:'⚖️', color:'blue',   value:'7.874', unit:'g/cm³', source:'https://periodic-table.io/fe', sourceTitle:'Periodic Table — Iron' },
+        { name:'Melting Point', icon:'🔥', color:'red',    value:'1538',  unit:'°C',   source:'https://periodic-table.io/fe', sourceTitle:'Periodic Table — Iron' },
+        { name:'Boiling Point', icon:'💨', color:'orange', value:'2862',  unit:'°C',   source:'https://periodic-table.io/fe', sourceTitle:'Periodic Table — Iron' },
       ]
     },
     copper: {
@@ -470,71 +370,14 @@
       structureImg: '',
       bohrModelImg: 'https://sciencenotes.org/wp-content/uploads/2021/10/Copper-Bohr-Model.png',
       properties: [
-        { name:'Density',             icon:'⚖️', color:'blue',   value:'8.960', unit:'g/cm³',  source:'https://periodic-table.io/cu', sourceTitle:'Periodic Table — Copper' },
-        { name:'Melting Point',        icon:'🔥', color:'red',    value:'1085',  unit:'°C',     source:'https://periodic-table.io/cu', sourceTitle:'Periodic Table — Copper' },
-        { name:'Boiling Point',        icon:'💨', color:'orange', value:'2562',  unit:'°C',     source:'https://periodic-table.io/cu', sourceTitle:'Periodic Table — Copper' },
+        { name:'Density',      icon:'⚖️', color:'blue',   value:'8.960', unit:'g/cm³', source:'https://periodic-table.io/cu', sourceTitle:'Periodic Table — Copper' },
+        { name:'Melting Point', icon:'🔥', color:'red',    value:'1085',  unit:'°C',   source:'https://periodic-table.io/cu', sourceTitle:'Periodic Table — Copper' },
+        { name:'Boiling Point', icon:'💨', color:'orange', value:'2562',  unit:'°C',   source:'https://periodic-table.io/cu', sourceTitle:'Periodic Table — Copper' },
       ]
     }
   };
 
-  // ════════════════════════════════════════════════════════════════════
-  //  LIVE API — fetchFromAPI(materialName)
-  //
-  //  Uses TWO completely free APIs, no sign-up or key needed:
-  //
-  //  ┌── API 1: Periodic Table JSON (GitHub, MIT licence) ────────────┐
-  //  │  URL: https://raw.githubusercontent.com/Bowserinator/          │
-  //  │       Periodic-Table-JSON/master/PeriodicTableJSON.json        │
-  //  │                                                                 │
-  //  │  What it contains (raw field → our data contract field):       │
-  //  │   el.name                  → name                              │
-  //  │   el.symbol                → symbol                            │
-  //  │   el.number                → atomicNumber                      │
-  //  │   el.atomic_mass           → atomicWeight                      │
-  //  │   el.category              → category                          │
-  //  │   el.period                → period                            │
-  //  │   el.group                 → group                             │
-  //  │   el.phase                 → phase                             │
-  //  │   el.electron_configuration→ electronConfig                    │
-  //  │   el.discovered_by         → discoveredBy                      │
-  //  │   el.named_by              → namedBy                           │
-  //  │   el.appearance            → appearance                        │
-  //  │   el.bohr_model_image      → bohrModelImg  ← Bohr image URL   │
-  //  │   el.image.url             → symbolImg      ← element photo    │
-  //  │   el.density               → Density card   (g/cm³)           │
-  //  │   el.melt  (Kelvin)        → Melting Point card (→ °C)        │
-  //  │   el.boil  (Kelvin)        → Boiling Point card (→ °C)        │
-  //  │   el.molar_heat            → Thermal Conductivity card         │
-  //  └─────────────────────────────────────────────────────────────────┘
-  //
-  //  ┌── API 2: PubChem (NIH, completely free) ────────────────────────┐
-  //  │  URL: https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/      │
-  //  │       name/{element}/property/MolecularWeight,                  │
-  //  │       MeltingPoint,BoilingPoint/JSON                            │
-  //  │                                                                 │
-  //  │  Used as fallback when element is NOT in the Periodic Table    │
-  //  │  JSON (alloys, compounds like "Steel", "Graphene", etc.)        │
-  //  │   props.MolecularWeight    → atomicWeight                       │
-  //  │   props.MeltingPoint       → Melting Point card                 │
-  //  │   props.BoilingPoint       → Boiling Point card                 │
-  //  └─────────────────────────────────────────────────────────────────┘
-  //
-  //  ┌── WANT MORE DATA? Add these APIs: ─────────────────────────────┐
-  //  │  Young's Modulus + Crystal Structure:                           │
-  //  │    Materials Project API — free key at materialsproject.org     │
-  //  │    GET https://api.materialsproject.org/materials/              │
-  //  │        ?formula={symbol}&fields=elasticity,structure            │
-  //  │    Map: elasticity.G_VRH → Young's Modulus (GPa)               │
-  //  │         structure.lattice.matrix → crystal structure type       │
-  //  │                                                                 │
-  //  │  Crystal structure images:                                      │
-  //  │    https://www.crystallography.net/cod/                         │
-  //  └─────────────────────────────────────────────────────────────────┘
-  // ════════════════════════════════════════════════════════════════════
-
-  async function fetchFromAPI(materialName) {
-
-    // ── STEP 1: Try the Periodic Table JSON first ──────────────────────
+    async function fetchFromAPI(materialName) {
     const ptRes  = await fetch(
       'https://raw.githubusercontent.com/Bowserinator/Periodic-Table-JSON/master/PeriodicTableJSON.json'
     );
@@ -544,48 +387,42 @@
     );
 
     if (el) {
-      // Found as a pure element — map every API field to our data contract
       return {
         name:           el.name,
-        // ── Header badge ─────────────────────────────────────────────
-        symbol:         el.symbol,                          // el.symbol
-        atomicNumber:   String(el.number),                  // el.number
-        atomicWeight:   String(el.atomic_mass),             // el.atomic_mass
-        category:       el.category || '—',                 // el.category
-        // ── Element info chips ───────────────────────────────────────
-        appearance:     el.appearance     || '—',           // el.appearance
-        discoveredBy:   el.discovered_by  || '—',           // el.discovered_by
-        namedBy:        el.named_by       || '—',           // el.named_by
-        period:         String(el.period),                  // el.period
-        group:          String(el.group   || '—'),          // el.group
-        phase:          el.phase          || '—',           // el.phase
-        electronConfig: el.electron_configuration || '—',   // el.electron_configuration
-        // ── Visuals ──────────────────────────────────────────────────
-        // Crystal structure is not in this JSON — connect Materials Project API
+        symbol:         el.symbol,
+        atomicNumber:   String(el.number),
+        atomicWeight:   String(el.atomic_mass),
+        category:       el.category || '—',
+        appearance:     el.appearance     || '—',
+        discoveredBy:   el.discovered_by  || '—',
+        namedBy:        el.named_by       || '—',
+        period:         String(el.period),
+        group:          String(el.group   || '—'),
+        phase:          el.phase          || '—',
+        electronConfig: el.electron_configuration || '—',
         structure:      '—',
         structLabel:    '—',
-        symbolImg:      el.image?.url        || '',         // el.image.url
-        structureImg:   '',                                  // add via Materials Project API
-        bohrModelImg:   el.bohr_model_image  || '',         // el.bohr_model_image
-        // ── Property cards ───────────────────────────────────────────
+        symbolImg:      el.image?.url        || '',
+        structureImg:   '',
+        bohrModelImg:   el.bohr_model_image  || '',
         properties: [
           {
             name:'Density', icon:'⚖️', color:'blue',
-            value: el.density != null ? String(el.density) : '—',  // el.density (g/cm³)
+            value: el.density != null ? String(el.density) : '—',
             unit:  'g/cm³',
             source:      `https://periodic-table.io/${el.symbol.toLowerCase()}`,
             sourceTitle: `Periodic Table — ${el.name}`,
           },
           {
             name:'Melting Point', icon:'🔥', color:'red',
-            value: el.melt != null ? String((el.melt - 273.15).toFixed(1)) : '—', // el.melt (K→°C)
+            value: el.melt != null ? String((el.melt - 273.15).toFixed(1)) : '—',
             unit:  '°C',
             source:      `https://periodic-table.io/${el.symbol.toLowerCase()}`,
             sourceTitle: `Periodic Table — ${el.name}`,
           },
           {
             name:'Boiling Point', icon:'💨', color:'orange',
-            value: el.boil != null ? String((el.boil - 273.15).toFixed(1)) : '—', // el.boil (K→°C)
+            value: el.boil != null ? String((el.boil - 273.15).toFixed(1)) : '—',
             unit:  '°C',
             source:      `https://periodic-table.io/${el.symbol.toLowerCase()}`,
             sourceTitle: `Periodic Table — ${el.name}`,
@@ -594,7 +431,6 @@
       };
     }
 
-    // ── STEP 2: Not a pure element — try PubChem for compounds/alloys ──
     let pubchem = {};
     try {
       const pcRes = await fetch(
@@ -606,7 +442,7 @@
         const pcData = await pcRes.json();
         pubchem = pcData?.PropertyTable?.Properties?.[0] || {};
       }
-    } catch (_) { /* PubChem is optional — app continues without it */ }
+    } catch (_) {}
 
     if (Object.keys(pubchem).length > 0) {
       return {
@@ -620,27 +456,33 @@
         structure: '—',  structLabel: '—',
         symbolImg: '',   structureImg: '',   bohrModelImg: '',
         properties: [
-          { name:'Density',             icon:'⚖️', color:'blue',   value:'—', unit:'g/cm³', source:'https://pubchem.ncbi.nlm.nih.gov', sourceTitle:'PubChem' },
-          { name:'Melting Point',        icon:'🔥', color:'red',    value: pubchem.MeltingPoint  ? String(pubchem.MeltingPoint)  : '—', unit:'°C', source:'https://pubchem.ncbi.nlm.nih.gov', sourceTitle:'PubChem' },
+          { name:'Density',      icon:'⚖️', color:'blue',   value:'—', unit:'g/cm³', source:'https://pubchem.ncbi.nlm.nih.gov', sourceTitle:'PubChem' },
+          { name:'Melting Point', icon:'🔥', color:'red',    value: pubchem.MeltingPoint  ? String(pubchem.MeltingPoint)  : '—', unit:'°C', source:'https://pubchem.ncbi.nlm.nih.gov', sourceTitle:'PubChem' },
           { name:'Boiling Point', icon:'💨', color:'orange', value: pubchem.BoilingPoint ? String(pubchem.BoilingPoint) : '—', unit:'°C', source:'https://pubchem.ncbi.nlm.nih.gov', sourceTitle:'PubChem' },
         ],
       };
     }
 
-    // Nothing found in either API
     return null;
   }
 
-  // ════════════════════════════════════════════════════════════════════
-  //  SEARCH — entry point when user presses the button or hits Enter
-  // ════════════════════════════════════════════════════════════════════
+  // ══════════════════════════════════════════════════════
+  //  ✅ FIXED searchMaterial()
+  //  Now reads from the ACTIVE (visible) input only,
+  //  so stale values in the hidden input never interfere.
+  // ══════════════════════════════════════════════════════
   async function searchMaterial() {
     const inp    = document.getElementById('materialInput');
     const inpTop = document.getElementById('materialInputTop');
-    const name   = (inp?.value || '').trim() || (inpTop?.value || '').trim();
+
+    // Determine which view is visible and read ONLY from that input
+    const centerVisible = !document.getElementById('centerView').classList.contains('hidden');
+    const name = centerVisible
+      ? (inp?.value || '').trim()
+      : (inpTop?.value || '').trim();
+
     if (!name) { showError('Please enter a material name'); return; }
 
-    // 1. Check demo data first — works instantly, no network needed
     const demoKey = name.toLowerCase().replace(/\s+/g, '');
     if (DEMO_DATA[demoKey]) {
       showResultsView(name, inp, inpTop);
@@ -649,7 +491,6 @@
       return;
     }
 
-    // 2. Live fetch from Periodic Table JSON + PubChem
     showResultsView(name, inp, inpTop);
     document.getElementById('loadingState').classList.remove('hidden');
     document.getElementById('resultsContainer').classList.add('hidden');
@@ -672,29 +513,24 @@
   }
 
   function quickSearch(name) {
-    document.getElementById('materialInput').value = name;
-    const top = document.getElementById('materialInputTop');
-    if (top) top.value = name;
+    // Set BOTH inputs so whichever view is visible shows the correct value
+    const inp    = document.getElementById('materialInput');
+    const inpTop = document.getElementById('materialInputTop');
+    if (inp)    inp.value    = name;
+    if (inpTop) inpTop.value = name;
     searchMaterial();
   }
 
   function showResultsView(name, inp, inpTop) {
     document.getElementById('centerView').classList.add('hidden');
     document.getElementById('resultsView').classList.remove('hidden');
-    if (inp)    inp.value    = name;
+    // Sync the top input to always reflect what was searched
     if (inpTop) inpTop.value = name;
   }
 
-  // ════════════════════════════════════════════════════════════════════
-  //  DISPLAY RESULTS
-  //  Reads the data contract fields and populates every card/badge/chip.
-  //  To add a new card: add the property to fetchFromAPI properties[]
-  //  and add its BAR_MAX entry above — nothing else needs to change.
-  // ════════════════════════════════════════════════════════════════════
   function displayResults() {
     const d = currentMaterial;
 
-    // ── Header badge ─────────────────────────────────────────────────
     document.getElementById('materialName').textContent    = d.name;
     document.getElementById('badgeSymbol').textContent     = d.symbol      || d.name.slice(0,2).toUpperCase();
     document.getElementById('badgeAtomicNum').textContent  = d.atomicNumber || '—';
@@ -703,13 +539,11 @@
       ? `${d.category}  ·  Atomic: ${d.atomicNumber || '—'}  ·  Wt: ${d.atomicWeight || '—'}`
       : 'No classification data';
 
-    // ── Structure badges ──────────────────────────────────────────────
     const structText = (d.structLabel && d.structLabel !== '—')
       ? `◈ ${d.structLabel}` : '◈ Structure Unknown';
     document.getElementById('structureBadge').textContent  = structText;
     document.getElementById('structureBadge2').textContent = structText;
 
-    // ── Visuals ───────────────────────────────────────────────────────
     const sym   = d.symbol   || d.name.slice(0,2).toUpperCase();
     const stype = (d.structure && d.structure !== '—') ? d.structure : 'Unknown';
     document.getElementById('symbolImg').src =
@@ -719,7 +553,6 @@
     document.getElementById('symbolImgCaption').textContent    = `${sym} — ${d.name.toUpperCase()} · MATERIAL SYMBOL`;
     document.getElementById('structureImgCaption').textContent = `${stype} · CRYSTAL LATTICE`;
 
-    // ── Element info chips ────────────────────────────────────────────
     const infoFields = [
       { label:'APPEARANCE',      key:'appearance'     },
       { label:'DISCOVERED BY',   key:'discoveredBy'   },
@@ -739,7 +572,6 @@
       `).join('');
     }
 
-    // ── Bohr model image ──────────────────────────────────────────────
     const bohrImg = document.getElementById('bohrModelImg');
     if (bohrImg) {
       bohrImg.src = d.bohrModelImg
@@ -749,16 +581,13 @@
       document.getElementById('bohrSection').classList.remove('hidden');
     }
 
-    // ── Property cards ────────────────────────────────────────────────
     const grid = document.getElementById('propertiesGrid');
     grid.innerHTML = '';
     d.properties.forEach(p => grid.appendChild(createPropertyCard(p)));
 
-    // ── Demo banner ───────────────────────────────────────────────────
     const demoBanner = document.getElementById('demoBanner');
     d._demo ? demoBanner.classList.remove('hidden') : demoBanner.classList.add('hidden');
 
-    // ── Show container + animate bars ────────────────────────────────
     const container = document.getElementById('resultsContainer');
     container.classList.remove('hidden');
     container.classList.add('fade-in');
@@ -769,11 +598,6 @@
     });
   }
 
-  // ════════════════════════════════════════════════════════════════════
-  //  PROPERTY CARD BUILDER
-  //  Reads: prop.name, prop.icon, prop.color, prop.value, prop.unit,
-  //         prop.source, prop.sourceTitle
-  // ════════════════════════════════════════════════════════════════════
   function createPropertyCard(prop) {
     const card = document.createElement('div');
     const borders = { blue:'border-blue-500', red:'border-red-500', orange:'border-orange-500', green:'border-green-500', purple:'border-purple-500' };
@@ -807,9 +631,6 @@
     return card;
   }
 
- 
-  //  COMPARISON SIDEBAR
- 
   function addToComparison() {
     if (!currentMaterial) return;
     if (comparisonMaterials.some(m => m.name === currentMaterial.name)) {
@@ -843,9 +664,6 @@
   function removeFromComparison(index) { comparisonMaterials.splice(index, 1); updateComparisonList(); }
   function clearComparison()           { comparisonMaterials = []; updateComparisonList(); }
 
-  // ════════════════════════════════════════════════════════════════════
-  //  ERROR BANNER
-  // ════════════════════════════════════════════════════════════════════
   function showError(message) {
     const inCenter = !document.getElementById('centerView').classList.contains('hidden');
     if (inCenter) {
