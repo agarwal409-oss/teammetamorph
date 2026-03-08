@@ -157,16 +157,14 @@
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen">
 
-  <!-- ═══════════════════════════════════════════════════════
-       CENTERED SEARCH VIEW
-  ═══════════════════════════════════════════════════════ -->
+ 
   <div id="centerView" class="center-mode px-4">
     <div class="search-container">
       <div class="text-center mb-8">
-        <div class="label-mono mb-2">// MATERIAL DATABASE v2.4.1</div>
+        <!-- <div class="label-mono mb-2">// MATERIAL DATABASE v2.4.1</div> -->
         <h1 class="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent mb-1" style="font-family:var(--display)">MatProp</h1>
         <div class="text-xl tracking-widest text-blue-300 mb-2" style="font-family:var(--display)">REAL-TIME</div>
-        <p class="text-gray-400 text-base">Instant Material Property Lookup</p>
+        <p class="text-gray-400 text-base">Instant Material Property/Info Lookup</p>
       </div>
 
       <div class="bg-gray-800 rounded-lg p-6 glow-accent border border-gray-700">
@@ -197,15 +195,17 @@
         </div>
         <div class="mt-4 flex items-center gap-2">
           <span class="status-dot"></span>
-          <span style="font-family:var(--mono);font-size:.62rem;color:#3e6a9e;letter-spacing:.08em">Configure Google API credentials — API_KEY &amp; SEARCH_ENGINE_ID</span>
+          <!-- <span style="font-family:var(--mono);font-size:.62rem;color:#3e6a9e;letter-spacing:.08em">Configure Google API credentials — API_KEY &amp; SEARCH_ENGINE_ID</span> -->
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════════════════════
-       RESULTS VIEW
-  ═══════════════════════════════════════════════════════ -->
+  
+
+
+
+
   <div id="resultsView" class="hidden">
     <div class="container mx-auto px-4 py-8 max-w-7xl">
 
@@ -229,7 +229,7 @@
               style="font-family:var(--display);font-size:.7rem">SEARCH</button>
           </div>
           <div class="mt-3 flex flex-wrap gap-2 items-center justify-center">
-            <span style="font-family:var(--mono);font-size:.58rem;color:#3e6a9e">QUICK:</span>
+            <span style="font-family:var(--mono);font: size 0.18em;color:#3e6a9e">QUICK:</span>
             <button class="quick-tag" onclick="quickSearch('Iron')">Iron</button>
             <button class="quick-tag" onclick="quickSearch('Copper')">Copper</button>
             <button class="quick-tag" onclick="quickSearch('Aluminum')">Aluminum</button>
@@ -263,9 +263,9 @@
             </div>
           </div>
 
-          <!-- ══════════════════════════════════════
-               RESULTS CONTAINER — all cards live here
-          ══════════════════════════════════════ -->
+         
+
+
           <div id="resultsContainer" class="hidden space-y-5">
 
             <!-- 1. MATERIAL BANNER (symbol badge + name + structure badge) -->
@@ -294,7 +294,7 @@
             <!-- 2. DEMO BANNER -->
             <div id="demoBanner" class="demo-banner hidden">
               <span class="demo-dot"></span>
-              <span><strong>DEMO MODE</strong> — Showing reference data. Add Google API credentials for live results.</span>
+              <span><strong></strong></span>
             </div>
 
             <!-- 3. ELEMENT INFO — 3 chips per row -->
@@ -332,10 +332,10 @@
             </div>
 
           </div>
-          <!-- /resultsContainer -->
+  
 
         </div>
-        <!-- /main col (lg:col-span-3) -->
+    
 
         <!-- ── RIGHT: COMPARISON SIDEBAR (1 col) ── -->
         <div class="lg:col-span-1 space-y-5">
@@ -373,345 +373,493 @@
   </div>
 
   <script>
-    // ===== CONFIG =====
-    const API_KEY          = 'YOUR_GOOGLE_API_KEY_HERE';
-    const SEARCH_ENGINE_ID = 'YOUR_SEARCH_ENGINE_ID_HERE';
+   let currentMaterial     = null;
+  let comparisonMaterials = [];
 
-    let currentMaterial     = null;
-    let comparisonMaterials = [];
+  // ── Bar fill max values (used to draw the % bar on each property card)
+  const BAR_MAX = {
+    'Density':             25,    // g/cm³   — osmium is ~22.6
+    'Melting Point':       3500,  // °C      — tungsten is ~3422
+    'Boiling Point':       5700,  // °C      — tungsten is ~5555
 
-    // ===== DEMO DATA =====
-    const DEMO_DATA = {
-      iron: {
-        name: 'Iron', _demo: true,
-        appearance:     'Lustrous metallic grey',
-        discoveredBy:   'Known since ancient times',
-        namedBy:        'Anglo-Saxon: "iren"',
-        period:         '4',
-        group:          '8',
-        phase:          'Solid',
-        electronConfig: '[Ar] 3d⁶ 4s²',
-        bohrModelImg:   'https://sciencenotes.org/wp-content/uploads/2021/10/Iron-Bohr-Model.png',
-        properties: [
-          { name:'Density',             icon:'⚖️', color:'blue',   value:'7874', unit:'kg/m³', source:'https://www.engineeringtoolbox.com/density-materials-d_1652.html', sourceTitle:'Engineering Toolbox — Density', confidence:'high' },
-          { name:'Melting Point',        icon:'🔥', color:'red',    value:'1538', unit:'°C',    source:'https://www.periodic-table.org/Iron/', sourceTitle:'Periodic Table — Iron', confidence:'high' },
-          { name:'Boiling Point',        icon:'💨', color:'orange', value:'2862', unit:'°C',    source:'https://www.periodic-table.org/Iron/', sourceTitle:'Periodic Table — Iron', confidence:'high' },
-          { name:'Thermal Conductivity', icon:'🌡️', color:'green',  value:'80.4', unit:'W/m·K', source:'https://www.engineeringtoolbox.com/thermal-conductivity-d_429.html', sourceTitle:'Engineering Toolbox — Thermal Conductivity', confidence:'high' },
-          { name:"Young's Modulus",      icon:'📐', color:'purple', value:'211',  unit:'GPa',   source:'https://www.azom.com/article.aspx?ArticleID=1547', sourceTitle:'AZoM — Iron Mechanical Properties', confidence:'high' },
-        ]
-      },
-      copper: {
-        name: 'Copper', _demo: true,
-        appearance:     'Reddish-orange lustrous metal',
-        discoveredBy:   'Middle East civilizations (~9000 BC)',
-        namedBy:        'Latin: "Cuprum" (Cyprus island)',
-        period:         '4',
-        group:          '11',
-        phase:          'Solid',
-        electronConfig: '[Ar] 3d¹⁰ 4s¹',
-        bohrModelImg:   'https://sciencenotes.org/wp-content/uploads/2021/10/Copper-Bohr-Model.png',
-        properties: [
-          { name:'Density',             icon:'⚖️', color:'blue',   value:'8960', unit:'kg/m³', source:'https://www.engineeringtoolbox.com/density-materials-d_1652.html', sourceTitle:'Engineering Toolbox — Density', confidence:'high' },
-          { name:'Melting Point',        icon:'🔥', color:'red',    value:'1085', unit:'°C',    source:'https://www.periodic-table.org/Copper/', sourceTitle:'Periodic Table — Copper', confidence:'high' },
-          { name:'Boiling Point',        icon:'💨', color:'orange', value:'2562', unit:'°C',    source:'https://www.periodic-table.org/Copper/', sourceTitle:'Periodic Table — Copper', confidence:'high' },
-          { name:'Thermal Conductivity', icon:'🌡️', color:'green',  value:'401',  unit:'W/m·K', source:'https://www.engineeringtoolbox.com/thermal-conductivity-d_429.html', sourceTitle:'Engineering Toolbox — Thermal Conductivity', confidence:'high' },
-          { name:"Young's Modulus",      icon:'📐', color:'purple', value:'120',  unit:'GPa',   source:'https://www.azom.com/article.aspx?ArticleID=2856', sourceTitle:'AZoM — Copper Mechanical Properties', confidence:'high' },
-        ]
-      }
-    };
+  };
 
-    // ===== MATERIAL META (badge + structure) =====
-    const MATERIAL_META = {
-      iron:      { symbol:'Fe',   atomicNum:26,  weight:'55.85',  structure:'BCC',     structLabel:'BCC — Body-Centered Cubic',    class:'Transition Metal'  },
-      copper:    { symbol:'Cu',   atomicNum:29,  weight:'63.55',  structure:'FCC',     structLabel:'FCC — Face-Centered Cubic',    class:'Transition Metal'  },
-      aluminum:  { symbol:'Al',   atomicNum:13,  weight:'26.98',  structure:'FCC',     structLabel:'FCC — Face-Centered Cubic',    class:'Post-Trans. Metal' },
-      aluminium: { symbol:'Al',   atomicNum:13,  weight:'26.98',  structure:'FCC',     structLabel:'FCC — Face-Centered Cubic',    class:'Post-Trans. Metal' },
-      titanium:  { symbol:'Ti',   atomicNum:22,  weight:'47.87',  structure:'HCP',     structLabel:'HCP — Hexagonal Close-Packed', class:'Transition Metal'  },
-      steel:     { symbol:'Fe+C', atomicNum:'—', weight:'~55.9',  structure:'BCC/FCC', structLabel:'BCC/FCC — Phase Dependent',    class:'Ferrous Alloy'     },
-      gold:      { symbol:'Au',   atomicNum:79,  weight:'196.97', structure:'FCC',     structLabel:'FCC — Face-Centered Cubic',    class:'Transition Metal'  },
-      silver:    { symbol:'Ag',   atomicNum:47,  weight:'107.87', structure:'FCC',     structLabel:'FCC — Face-Centered Cubic',    class:'Transition Metal'  },
-      nickel:    { symbol:'Ni',   atomicNum:28,  weight:'58.69',  structure:'FCC',     structLabel:'FCC — Face-Centered Cubic',    class:'Transition Metal'  },
-      tungsten:  { symbol:'W',    atomicNum:74,  weight:'183.84', structure:'BCC',     structLabel:'BCC — Body-Centered Cubic',    class:'Transition Metal'  },
-      graphene:  { symbol:'C',    atomicNum:6,   weight:'12.01',  structure:'2D Hex',  structLabel:'2D Hexagonal Lattice',         class:'Carbon Allotrope'  },
-      silicon:   { symbol:'Si',   atomicNum:14,  weight:'28.09',  structure:'DC',      structLabel:'Diamond Cubic',                class:'Metalloid'         },
-      magnesium: { symbol:'Mg',   atomicNum:12,  weight:'24.31',  structure:'HCP',     structLabel:'HCP — Hexagonal Close-Packed', class:'Alkaline Earth'    },
-      zinc:      { symbol:'Zn',   atomicNum:30,  weight:'65.38',  structure:'HCP',     structLabel:'HCP — Hexagonal Close-Packed', class:'Transition Metal'  },
-      lead:      { symbol:'Pb',   atomicNum:82,  weight:'207.2',  structure:'FCC',     structLabel:'FCC — Face-Centered Cubic',    class:'Post-Trans. Metal' },
-    };
+  // ════════════════════════════════════════════════════════════════════
+  //  DATA CONTRACT
+  //  Every material object — whether from demo data OR the live API —
+  //  must have exactly these fields. displayResults() reads ONLY these.
+  //
+  //  {
+  //    name:           string   — "Iron"
+  //    _demo:          bool     — true only for DEMO_DATA entries
+  //
+  //    // ── HEADER BADGE ─────────────────────────────────────────────
+  //    symbol:         string   — "Fe"
+  //    atomicNumber:   string   — "26"
+  //    atomicWeight:   string   — "55.845"
+  //    category:       string   — "Transition Metal"
+  //
+  //    // ── ELEMENT INFO CHIPS ────────────────────────────────────────
+  //    appearance:     string   — "Lustrous metallic grey"
+  //    discoveredBy:   string   — "Known since ancient times"
+  //    namedBy:        string   — "Anglo-Saxon: iren"
+  //    period:         string   — "4"
+  //    group:          string   — "8"
+  //    phase:          string   — "Solid"
+  //    electronConfig: string   — "[Ar] 3d⁶ 4s²"
+  //
+  //    // ── VISUALS ───────────────────────────────────────────────────
+  //    structure:      string   — "BCC"
+  //    structLabel:    string   — "BCC — Body-Centered Cubic"
+  //    symbolImg:      string   — URL to element image
+  //    structureImg:   string   — URL to crystal structure image
+  //    bohrModelImg:   string   — URL to Bohr model image
+  //
+  //    // ── PROPERTY CARDS ────────────────────────────────────────────
+  //    properties: [
+  //      { name, icon, color, value, unit, source, sourceTitle }
+  //    ]
+  //  }
+  // ════════════════════════════════════════════════════════════════════
 
-    // ===== BAR MAX VALUES =====
-    const BAR_MAX = {
-      'Density': 20000, 'Melting Point': 3500, 'Boiling Point': 5700,
-      'Thermal Conductivity': 500, "Young's Modulus": 1000,
-    };
-
-    // ===== PROPERTY DEFINITIONS =====
-    const PROPERTIES = [
-      {
-        name:'Density', query:'density', icon:'⚖️', color:'blue',
-        patterns: [/(\d+\.?\d*)\s*(g\/cm³|g\/cc|kg\/m³|g\/ml)/gi, /density[:\s]+(\d+\.?\d*)\s*(g\/cm³|g\/cc|kg\/m³|g\/ml)/gi]
-      },
-      {
-        name:'Melting Point', query:'melting point', icon:'🔥', color:'red',
-        patterns: [/(\d+\.?\d*)\s*(°C|°F|K|celsius|fahrenheit)/gi, /melting point[:\s]+(\d+\.?\d*)\s*(°C|°F|K)/gi, /melts at[:\s]+(\d+\.?\d*)\s*(°C|°F|K)/gi]
-      },
-      {
-        name:'Boiling Point', query:'boiling point temperature', icon:'💨', color:'orange',
-        patterns: [/boiling point[:\s]+(\d+\.?\d*)\s*(°C|°F|K)/gi, /boils at[:\s]+(\d+\.?\d*)\s*(°C|°F|K)/gi, /(\d{3,4}\.?\d*)\s*(°C|K)/gi]
-      },
-      {
-        name:'Thermal Conductivity', query:'thermal conductivity', icon:'🌡️', color:'green',
-        patterns: [/(\d+\.?\d*)\s*(W\/m·K|W\/mK|W\/m-K|W\/(m·K)|W\/(m K))/gi, /thermal conductivity[:\s]+(\d+\.?\d*)\s*(W\/m·K|W\/mK)/gi]
-      },
-      {
-        name:"Young's Modulus", query:"Young's modulus elastic modulus stiffness", icon:'📐', color:'purple',
-        patterns: [/young[''\u2019]?s modulus[:\s]+(\d+\.?\d*)\s*(GPa|MPa|psi)/gi, /elastic modulus[:\s]+(\d+\.?\d*)\s*(GPa|MPa)/gi, /(\d+\.?\d*)\s*(GPa)/gi]
-      },
-    ];
-
-    // ===== QUICK SEARCH =====
-    function quickSearch(name) {
-      document.getElementById('materialInput').value = name;
-      const top = document.getElementById('materialInputTop');
-      if (top) top.value = name;
-      searchMaterial();
-    }
-
-    // ===== SEARCH =====
-    async function searchMaterial() {
-      const inp    = document.getElementById('materialInput');
-      const inpTop = document.getElementById('materialInputTop');
-      const name   = (inp?.value || '').trim() || (inpTop?.value || '').trim();
-      if (!name) { showError('Please enter a material name'); return; }
-
-      // Check demo data first
-      const demoKey = name.toLowerCase().replace(/\s+/g,'');
-      if (DEMO_DATA[demoKey]) {
-        document.getElementById('centerView').classList.add('hidden');
-        document.getElementById('resultsView').classList.remove('hidden');
-        if (inp) inp.value = name;
-        if (inpTop) inpTop.value = name;
-        currentMaterial = DEMO_DATA[demoKey];
-        displayResults();
-        return;
-      }
-
-      if (API_KEY === 'YOUR_GOOGLE_API_KEY_HERE' || SEARCH_ENGINE_ID === 'YOUR_SEARCH_ENGINE_ID_HERE') {
-        showError('Please configure your Google Custom Search API credentials in the code');
-        return;
-      }
-
-      document.getElementById('centerView').classList.add('hidden');
-      document.getElementById('resultsView').classList.remove('hidden');
-      if (inp) inp.value = name;
-      if (inpTop) inpTop.value = name;
-
-      document.getElementById('loadingState').classList.remove('hidden');
-      document.getElementById('resultsContainer').classList.add('hidden');
-      document.getElementById('errorState').classList.add('hidden');
-
-      try {
-        const results = await Promise.all(PROPERTIES.map(p => searchProperty(name, p.query)));
-        currentMaterial = {
-          name,
-          properties: PROPERTIES.map((p, i) => ({ ...p, ...parseSearchResults(results[i], p), rawResults: results[i] }))
-        };
-        displayResults();
-      } catch (err) {
-        console.error(err);
-        showError('Search failed. Please check your API credentials and try again.');
-      } finally {
-        document.getElementById('loadingState').classList.add('hidden');
-      }
-    }
-
-    // ===== API CALL =====
-    async function searchProperty(material, property) {
-      const url = `https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${SEARCH_ENGINE_ID}&q=${encodeURIComponent(material + ' ' + property)}`;
-      const res = await fetch(url);
-      if (!res.ok) throw new Error(`API error ${res.status}`);
-      return res.json();
-    }
-
-    // ===== PARSE =====
-    function parseSearchResults(data, property) {
-      if (!data.items?.length) return { value:'Not found', unit:'', source:null, confidence:'low' };
-      for (const item of data.items) {
-        const snippet = item.snippet || '';
-        for (const pattern of property.patterns) {
-          const matches = [...snippet.matchAll(pattern)];
-          if (matches.length) {
-            const m = matches[0];
-            return { value:m[1], unit:m[2]||'', source:item.link, sourceTitle:item.title, confidence:'high' };
-          }
-        }
-      }
-      return { value:'Check source', unit:'', source:data.items[0].link, sourceTitle:data.items[0].title, confidence:'low' };
-    }
-
-    // ===== DISPLAY RESULTS =====
-    function displayResults() {
-      const key  = currentMaterial.name.toLowerCase().replace(/\s+/g,'');
-      const meta = MATERIAL_META[key] || Object.entries(MATERIAL_META).find(([k]) => key.includes(k))?.[1] || null;
-
-      // Symbol badge
-      document.getElementById('materialName').textContent   = currentMaterial.name;
-      document.getElementById('badgeAtomicNum').textContent = meta ? meta.atomicNum : '—';
-      document.getElementById('badgeSymbol').textContent    = meta ? meta.symbol : currentMaterial.name.slice(0,2).toUpperCase();
-      document.getElementById('badgeWeight').textContent    = meta ? meta.weight : '—';
-      document.getElementById('materialMeta').textContent   = meta
-        ? `${meta.class}  ·  Atomic: ${meta.atomicNum}  ·  Wt: ${meta.weight}`
-        : 'No classification data for this material';
-
-      // Structure badges
-      const structText = meta ? `◈ ${meta.structLabel}` : '◈ Structure Unknown';
-      document.getElementById('structureBadge').textContent  = structText;
-      document.getElementById('structureBadge2').textContent = structText;
-
-      // Visuals
-      // IMAGE SWAP: replace these .src lines with apiData.images.symbol / apiData.images.structure
-      const sym   = meta ? meta.symbol : currentMaterial.name.slice(0,2).toUpperCase();
-      const stype = meta ? meta.structure : 'Unknown';
-      document.getElementById('symbolImg').src    = `https://placehold.co/600x150/0d1524/3b9eff?text=${encodeURIComponent(sym + ' \u2014 ' + currentMaterial.name)}&font=raleway`;
-      document.getElementById('structureImg').src = `https://placehold.co/600x118/0d1524/f5a623?text=${encodeURIComponent(stype + ' Crystal Structure')}&font=raleway`;
-      document.getElementById('symbolImgCaption').textContent    = `${sym} — ${currentMaterial.name.toUpperCase()} · MATERIAL SYMBOL`;
-      document.getElementById('structureImgCaption').textContent = `${stype} · CRYSTAL LATTICE`;
-
+  // ── DEMO DATA ────────────────────────────────────────────────────────
+  // These two entries work instantly without any network call.
+  // They follow the exact same data contract above.
+  // Add more elements here the same way to expand offline coverage.
+  const DEMO_DATA = {
+    iron: {
+      name: 'Iron',  _demo: true,
+      // Header badge
+      symbol: 'Fe',  atomicNumber: '26',  atomicWeight: '55.845',
+      category: 'Transition Metal',
       // Element info chips
-      // IMAGE SWAP (Bohr model): replace bohrModelImg below with apiData.bohrModelImg
-      const infoFields = [
-        { label:'APPEARANCE',      key:'appearance'     },
-        { label:'DISCOVERED BY',   key:'discoveredBy'   },
-        { label:'NAMED BY',        key:'namedBy'        },
-        { label:'PERIOD',          key:'period'         },
-        { label:'GROUP',           key:'group'          },
-        { label:'PHASE',           key:'phase'          },
-        { label:'ELECTRON CONFIG', key:'electronConfig' },
-      ];
-      const infoGrid = document.getElementById('elementInfoGrid');
-      if (infoGrid) {
-        infoGrid.innerHTML = infoFields.map(f => `
-          <div class="info-chip">
-            <div class="chip-label">${f.label}</div>
-            <div class="chip-value">${currentMaterial[f.key] || '—'}</div>
-          </div>
-        `).join('');
-      }
+      appearance:     'Lustrous metallic grey',
+      discoveredBy:   'Known since ancient times',
+      namedBy:        'Anglo-Saxon: "iren"',
+      period:         '4',
+      group:          '8',
+      phase:          'Solid',
+      electronConfig: '[Ar] 3d⁶ 4s²',
+      // Visuals
+      structure:    'BCC',
+      structLabel:  'BCC — Body-Centered Cubic',
+      symbolImg:    'https://images-of-elements.com/iron.jpg',
+      structureImg: '',
+      bohrModelImg: 'https://sciencenotes.org/wp-content/uploads/2021/10/Iron-Bohr-Model.png',
+      // Property cards
+      properties: [
+        { name:'Density',             icon:'⚖️', color:'blue',   value:'7.874', unit:'g/cm³',  source:'https://periodic-table.io/fe', sourceTitle:'Periodic Table — Iron' },
+        { name:'Melting Point',        icon:'🔥', color:'red',    value:'1538',  unit:'°C',     source:'https://periodic-table.io/fe', sourceTitle:'Periodic Table — Iron' },
+        { name:'Boiling Point',        icon:'💨', color:'orange', value:'2862',  unit:'°C',     source:'https://periodic-table.io/fe', sourceTitle:'Periodic Table — Iron' },
+      ]
+    },
+    copper: {
+      name: 'Copper',  _demo: true,
+      symbol: 'Cu',  atomicNumber: '29',  atomicWeight: '63.546',
+      category: 'Transition Metal',
+      appearance:     'Reddish-orange lustrous metal',
+      discoveredBy:   'Middle East civilisations (~9000 BC)',
+      namedBy:        'Latin: "Cuprum" (from Cyprus)',
+      period:         '4',
+      group:          '11',
+      phase:          'Solid',
+      electronConfig: '[Ar] 3d¹⁰ 4s¹',
+      structure:    'FCC',
+      structLabel:  'FCC — Face-Centered Cubic',
+      symbolImg:    'https://images-of-elements.com/copper.jpg',
+      structureImg: '',
+      bohrModelImg: 'https://sciencenotes.org/wp-content/uploads/2021/10/Copper-Bohr-Model.png',
+      properties: [
+        { name:'Density',             icon:'⚖️', color:'blue',   value:'8.960', unit:'g/cm³',  source:'https://periodic-table.io/cu', sourceTitle:'Periodic Table — Copper' },
+        { name:'Melting Point',        icon:'🔥', color:'red',    value:'1085',  unit:'°C',     source:'https://periodic-table.io/cu', sourceTitle:'Periodic Table — Copper' },
+        { name:'Boiling Point',        icon:'💨', color:'orange', value:'2562',  unit:'°C',     source:'https://periodic-table.io/cu', sourceTitle:'Periodic Table — Copper' },
+      ]
+    }
+  };
 
-      const bohrImg = document.getElementById('bohrModelImg');
-      if (bohrImg) {
-        bohrImg.src = currentMaterial.bohrModelImg || `https://placehold.co/300x280/080c14/f5a623?text=Bohr+Model&font=raleway`;
-        document.getElementById('bohrModelCaption').textContent =
-          `${currentMaterial.name.toUpperCase()} · ELECTRON CONFIG: ${currentMaterial.electronConfig || '—'}`;
-        document.getElementById('bohrSection').classList.remove('hidden');
-      }
+  // ════════════════════════════════════════════════════════════════════
+  //  LIVE API — fetchFromAPI(materialName)
+  //
+  //  Uses TWO completely free APIs, no sign-up or key needed:
+  //
+  //  ┌── API 1: Periodic Table JSON (GitHub, MIT licence) ────────────┐
+  //  │  URL: https://raw.githubusercontent.com/Bowserinator/          │
+  //  │       Periodic-Table-JSON/master/PeriodicTableJSON.json        │
+  //  │                                                                 │
+  //  │  What it contains (raw field → our data contract field):       │
+  //  │   el.name                  → name                              │
+  //  │   el.symbol                → symbol                            │
+  //  │   el.number                → atomicNumber                      │
+  //  │   el.atomic_mass           → atomicWeight                      │
+  //  │   el.category              → category                          │
+  //  │   el.period                → period                            │
+  //  │   el.group                 → group                             │
+  //  │   el.phase                 → phase                             │
+  //  │   el.electron_configuration→ electronConfig                    │
+  //  │   el.discovered_by         → discoveredBy                      │
+  //  │   el.named_by              → namedBy                           │
+  //  │   el.appearance            → appearance                        │
+  //  │   el.bohr_model_image      → bohrModelImg  ← Bohr image URL   │
+  //  │   el.image.url             → symbolImg      ← element photo    │
+  //  │   el.density               → Density card   (g/cm³)           │
+  //  │   el.melt  (Kelvin)        → Melting Point card (→ °C)        │
+  //  │   el.boil  (Kelvin)        → Boiling Point card (→ °C)        │
+  //  │   el.molar_heat            → Thermal Conductivity card         │
+  //  └─────────────────────────────────────────────────────────────────┘
+  //
+  //  ┌── API 2: PubChem (NIH, completely free) ────────────────────────┐
+  //  │  URL: https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/      │
+  //  │       name/{element}/property/MolecularWeight,                  │
+  //  │       MeltingPoint,BoilingPoint/JSON                            │
+  //  │                                                                 │
+  //  │  Used as fallback when element is NOT in the Periodic Table    │
+  //  │  JSON (alloys, compounds like "Steel", "Graphene", etc.)        │
+  //  │   props.MolecularWeight    → atomicWeight                       │
+  //  │   props.MeltingPoint       → Melting Point card                 │
+  //  │   props.BoilingPoint       → Boiling Point card                 │
+  //  └─────────────────────────────────────────────────────────────────┘
+  //
+  //  ┌── WANT MORE DATA? Add these APIs: ─────────────────────────────┐
+  //  │  Young's Modulus + Crystal Structure:                           │
+  //  │    Materials Project API — free key at materialsproject.org     │
+  //  │    GET https://api.materialsproject.org/materials/              │
+  //  │        ?formula={symbol}&fields=elasticity,structure            │
+  //  │    Map: elasticity.G_VRH → Young's Modulus (GPa)               │
+  //  │         structure.lattice.matrix → crystal structure type       │
+  //  │                                                                 │
+  //  │  Crystal structure images:                                      │
+  //  │    https://www.crystallography.net/cod/                         │
+  //  └─────────────────────────────────────────────────────────────────┘
+  // ════════════════════════════════════════════════════════════════════
 
-      // Properties grid
-      const grid = document.getElementById('propertiesGrid');
-      grid.innerHTML = '';
-      currentMaterial.properties.forEach(p => grid.appendChild(createPropertyCard(p)));
+  async function fetchFromAPI(materialName) {
 
-      // Demo banner
-      const demoBanner = document.getElementById('demoBanner');
-      currentMaterial._demo ? demoBanner.classList.remove('hidden') : demoBanner.classList.add('hidden');
+    // ── STEP 1: Try the Periodic Table JSON first ──────────────────────
+    const ptRes  = await fetch(
+      'https://raw.githubusercontent.com/Bowserinator/Periodic-Table-JSON/master/PeriodicTableJSON.json'
+    );
+    const ptData = await ptRes.json();
+    const el     = ptData.elements.find(
+      e => e.name.toLowerCase() === materialName.toLowerCase()
+    );
 
-      // Show container
-      const container = document.getElementById('resultsContainer');
-      container.classList.remove('hidden');
-      container.classList.add('fade-in');
-
-      // Animate bars
-      requestAnimationFrame(() => {
-        document.querySelectorAll('.prop-bar-fill').forEach(bar => {
-          setTimeout(() => { bar.style.width = bar.dataset.pct + '%'; }, 120);
-        });
-      });
+    if (el) {
+      // Found as a pure element — map every API field to our data contract
+      return {
+        name:           el.name,
+        // ── Header badge ─────────────────────────────────────────────
+        symbol:         el.symbol,                          // el.symbol
+        atomicNumber:   String(el.number),                  // el.number
+        atomicWeight:   String(el.atomic_mass),             // el.atomic_mass
+        category:       el.category || '—',                 // el.category
+        // ── Element info chips ───────────────────────────────────────
+        appearance:     el.appearance     || '—',           // el.appearance
+        discoveredBy:   el.discovered_by  || '—',           // el.discovered_by
+        namedBy:        el.named_by       || '—',           // el.named_by
+        period:         String(el.period),                  // el.period
+        group:          String(el.group   || '—'),          // el.group
+        phase:          el.phase          || '—',           // el.phase
+        electronConfig: el.electron_configuration || '—',   // el.electron_configuration
+        // ── Visuals ──────────────────────────────────────────────────
+        // Crystal structure is not in this JSON — connect Materials Project API
+        structure:      '—',
+        structLabel:    '—',
+        symbolImg:      el.image?.url        || '',         // el.image.url
+        structureImg:   '',                                  // add via Materials Project API
+        bohrModelImg:   el.bohr_model_image  || '',         // el.bohr_model_image
+        // ── Property cards ───────────────────────────────────────────
+        properties: [
+          {
+            name:'Density', icon:'⚖️', color:'blue',
+            value: el.density != null ? String(el.density) : '—',  // el.density (g/cm³)
+            unit:  'g/cm³',
+            source:      `https://periodic-table.io/${el.symbol.toLowerCase()}`,
+            sourceTitle: `Periodic Table — ${el.name}`,
+          },
+          {
+            name:'Melting Point', icon:'🔥', color:'red',
+            value: el.melt != null ? String((el.melt - 273.15).toFixed(1)) : '—', // el.melt (K→°C)
+            unit:  '°C',
+            source:      `https://periodic-table.io/${el.symbol.toLowerCase()}`,
+            sourceTitle: `Periodic Table — ${el.name}`,
+          },
+          {
+            name:'Boiling Point', icon:'💨', color:'orange',
+            value: el.boil != null ? String((el.boil - 273.15).toFixed(1)) : '—', // el.boil (K→°C)
+            unit:  '°C',
+            source:      `https://periodic-table.io/${el.symbol.toLowerCase()}`,
+            sourceTitle: `Periodic Table — ${el.name}`,
+          },
+        ],
+      };
     }
 
-    // ===== PROPERTY CARD =====
-    function createPropertyCard(prop) {
-      const card = document.createElement('div');
-      const borders = { blue:'border-blue-500', red:'border-red-500', orange:'border-orange-500', green:'border-green-500', purple:'border-purple-500' };
-      const bgs     = { blue:'bg-blue-500/10',  red:'bg-red-500/10',  orange:'bg-orange-500/10',  green:'bg-green-500/10',  purple:'bg-purple-500/10'  };
-      const hasData = prop.value !== 'Not found' && prop.value !== 'Check source';
-
-      let barPct = 0;
-      if (hasData) {
-        const maxVal = BAR_MAX[prop.name] || 1000;
-        const raw    = parseFloat(String(prop.value).replace(/[^0-9.]/g,''));
-        if (!isNaN(raw)) barPct = Math.min(Math.round((raw / maxVal) * 100), 100);
+    // ── STEP 2: Not a pure element — try PubChem for compounds/alloys ──
+    let pubchem = {};
+    try {
+      const pcRes = await fetch(
+        `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/` +
+        `${encodeURIComponent(materialName)}/property/` +
+        `MolecularWeight,MeltingPoint,BoilingPoint/JSON`
+      );
+      if (pcRes.ok) {
+        const pcData = await pcRes.json();
+        pubchem = pcData?.PropertyTable?.Properties?.[0] || {};
       }
+    } catch (_) { /* PubChem is optional — app continues without it */ }
 
-      card.className = `prop-card rounded-lg p-6 border-l-4 ${borders[prop.color]||'border-gray-500'} border border-gray-600`;
-      card.style.background = '#1a2a3f';
-      card.innerHTML = `
-        <div style="font-size:2rem;margin-bottom:.5rem">${prop.icon}</div>
-        <div style="font-family:var(--mono);font-size:.82rem;letter-spacing:.15em;color:#93c5fd;text-transform:uppercase;margin-bottom:.5rem;font-weight:600">${prop.name}</div>
-        <div style="font-family:var(--display);font-size:1.75rem;font-weight:900;line-height:1.1;margin-bottom:.25rem">
-          ${hasData
-            ? `<span style="color:#ffffff">${prop.value}</span>
-               <span style="font-size:1rem;color:#7dd3fc;font-family:var(--mono);font-weight:400"> ${prop.unit}</span>`
-            : `<span style="color:#94a3b8;font-size:1rem;font-family:var(--mono)">Not found</span>`}
-        </div>
-        <div class="prop-bar-track">
-          <div class="prop-bar-fill" data-pct="${barPct}" style="width:0%"></div>
-        </div>
-        ${prop.source ? `
-          <a href="${prop.source}" target="_blank" style="font-family:var(--mono);font-size:.72rem;color:#60a5fa;display:flex;align-items:center;gap:4px;margin-top:.75rem;text-decoration:none">📎 View Source</a>
-          <div style="font-family:var(--mono);font-size:.65rem;color:#94a3b8;margin-top:.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${prop.sourceTitle||''}">${prop.sourceTitle||''}</div>
-        ` : ''}
-      `;
-      return card;
+    if (Object.keys(pubchem).length > 0) {
+      return {
+        name:           materialName,
+        symbol:         materialName.slice(0, 2).toUpperCase(),
+        atomicNumber:   '—',
+        atomicWeight:   pubchem.MolecularWeight ? String(pubchem.MolecularWeight) : '—',
+        category:       'Compound / Alloy',
+        appearance: '—', discoveredBy: '—', namedBy: '—',
+        period: '—',     group: '—',       phase: '—',   electronConfig: '—',
+        structure: '—',  structLabel: '—',
+        symbolImg: '',   structureImg: '',   bohrModelImg: '',
+        properties: [
+          { name:'Density',             icon:'⚖️', color:'blue',   value:'—', unit:'g/cm³', source:'https://pubchem.ncbi.nlm.nih.gov', sourceTitle:'PubChem' },
+          { name:'Melting Point',        icon:'🔥', color:'red',    value: pubchem.MeltingPoint  ? String(pubchem.MeltingPoint)  : '—', unit:'°C', source:'https://pubchem.ncbi.nlm.nih.gov', sourceTitle:'PubChem' },
+          { name:'Boiling Point', icon:'💨', color:'orange', value: pubchem.BoilingPoint ? String(pubchem.BoilingPoint) : '—', unit:'°C', source:'https://pubchem.ncbi.nlm.nih.gov', sourceTitle:'PubChem' },
+        ],
+      };
     }
 
-    // ===== COMPARISON =====
-    function addToComparison() {
-      if (!currentMaterial) return;
-      if (comparisonMaterials.some(m => m.name === currentMaterial.name)) { showError('Material already in comparison list'); return; }
-      comparisonMaterials.push({...currentMaterial});
-      updateComparisonList();
+    // Nothing found in either API
+    return null;
+  }
+
+  // ════════════════════════════════════════════════════════════════════
+  //  SEARCH — entry point when user presses the button or hits Enter
+  // ════════════════════════════════════════════════════════════════════
+  async function searchMaterial() {
+    const inp    = document.getElementById('materialInput');
+    const inpTop = document.getElementById('materialInputTop');
+    const name   = (inp?.value || '').trim() || (inpTop?.value || '').trim();
+    if (!name) { showError('Please enter a material name'); return; }
+
+    // 1. Check demo data first — works instantly, no network needed
+    const demoKey = name.toLowerCase().replace(/\s+/g, '');
+    if (DEMO_DATA[demoKey]) {
+      showResultsView(name, inp, inpTop);
+      currentMaterial = DEMO_DATA[demoKey];
+      displayResults();
+      return;
     }
 
-    function updateComparisonList() {
-      const list = document.getElementById('comparisonList');
-      if (!comparisonMaterials.length) {
-        list.innerHTML = '<p style="font-family:var(--mono);font-size:.62rem;color:#3e6a9e">No materials added yet</p>';
+    // 2. Live fetch from Periodic Table JSON + PubChem
+    showResultsView(name, inp, inpTop);
+    document.getElementById('loadingState').classList.remove('hidden');
+    document.getElementById('resultsContainer').classList.add('hidden');
+    document.getElementById('errorState').classList.add('hidden');
+
+    try {
+      const data = await fetchFromAPI(name);
+      if (!data) {
+        showError(`"${name}" not found. Try an element name like Iron, Gold, or Silicon.`);
         return;
       }
-      list.innerHTML = comparisonMaterials.map((mat, idx) => `
-        <div class="bg-gray-700 rounded-lg p-4 relative border border-gray-600">
-          <button onclick="removeFromComparison(${idx})" class="absolute top-2 right-2 text-gray-400 hover:text-red-400" style="font-family:var(--mono);font-size:.8rem">✕</button>
-          <h4 class="font-bold pr-6 mb-2" style="font-family:var(--display);font-size:.8rem;letter-spacing:.05em;color:#e0f2fe">${mat.name}</h4>
-          ${mat.properties.map(p => {
-            const ok = p.value !== 'Not found' && p.value !== 'Check source';
-            return `<div class="mb-1" style="font-family:var(--mono);font-size:.72rem;color:#a8c8f0">
-              ${p.icon} <span style="font-weight:700">${p.name}:</span>
-              <span style="color:${ok?'#fff':'#3e6a9e'}">${ok?`${p.value} ${p.unit}`:p.value}</span>
-            </div>`;
-          }).join('')}
+      currentMaterial = data;
+      displayResults();
+    } catch (err) {
+      console.error(err);
+      showError('Fetch failed — check your internet connection and try again.');
+    } finally {
+      document.getElementById('loadingState').classList.add('hidden');
+    }
+  }
+
+  function quickSearch(name) {
+    document.getElementById('materialInput').value = name;
+    const top = document.getElementById('materialInputTop');
+    if (top) top.value = name;
+    searchMaterial();
+  }
+
+  function showResultsView(name, inp, inpTop) {
+    document.getElementById('centerView').classList.add('hidden');
+    document.getElementById('resultsView').classList.remove('hidden');
+    if (inp)    inp.value    = name;
+    if (inpTop) inpTop.value = name;
+  }
+
+  // ════════════════════════════════════════════════════════════════════
+  //  DISPLAY RESULTS
+  //  Reads the data contract fields and populates every card/badge/chip.
+  //  To add a new card: add the property to fetchFromAPI properties[]
+  //  and add its BAR_MAX entry above — nothing else needs to change.
+  // ════════════════════════════════════════════════════════════════════
+  function displayResults() {
+    const d = currentMaterial;
+
+    // ── Header badge ─────────────────────────────────────────────────
+    document.getElementById('materialName').textContent    = d.name;
+    document.getElementById('badgeSymbol').textContent     = d.symbol      || d.name.slice(0,2).toUpperCase();
+    document.getElementById('badgeAtomicNum').textContent  = d.atomicNumber || '—';
+    document.getElementById('badgeWeight').textContent     = d.atomicWeight || '—';
+    document.getElementById('materialMeta').textContent    = d.category
+      ? `${d.category}  ·  Atomic: ${d.atomicNumber || '—'}  ·  Wt: ${d.atomicWeight || '—'}`
+      : 'No classification data';
+
+    // ── Structure badges ──────────────────────────────────────────────
+    const structText = (d.structLabel && d.structLabel !== '—')
+      ? `◈ ${d.structLabel}` : '◈ Structure Unknown';
+    document.getElementById('structureBadge').textContent  = structText;
+    document.getElementById('structureBadge2').textContent = structText;
+
+    // ── Visuals ───────────────────────────────────────────────────────
+    const sym   = d.symbol   || d.name.slice(0,2).toUpperCase();
+    const stype = (d.structure && d.structure !== '—') ? d.structure : 'Unknown';
+    document.getElementById('symbolImg').src =
+      d.symbolImg    || `https://placehold.co/600x150/0d1524/3b9eff?text=${encodeURIComponent(sym + ' — ' + d.name)}&font=raleway`;
+    document.getElementById('structureImg').src =
+      d.structureImg || `https://placehold.co/600x118/0d1524/f5a623?text=${encodeURIComponent(stype + ' Crystal Structure')}&font=raleway`;
+    document.getElementById('symbolImgCaption').textContent    = `${sym} — ${d.name.toUpperCase()} · MATERIAL SYMBOL`;
+    document.getElementById('structureImgCaption').textContent = `${stype} · CRYSTAL LATTICE`;
+
+    // ── Element info chips ────────────────────────────────────────────
+    const infoFields = [
+      { label:'APPEARANCE',      key:'appearance'     },
+      { label:'DISCOVERED BY',   key:'discoveredBy'   },
+      { label:'NAMED BY',        key:'namedBy'        },
+      { label:'PERIOD',          key:'period'         },
+      { label:'GROUP',           key:'group'          },
+      { label:'PHASE',           key:'phase'          },
+      { label:'ELECTRON CONFIG', key:'electronConfig' },
+    ];
+    const infoGrid = document.getElementById('elementInfoGrid');
+    if (infoGrid) {
+      infoGrid.innerHTML = infoFields.map(f => `
+        <div class="info-chip">
+          <div class="chip-label">${f.label}</div>
+          <div class="chip-value">${d[f.key] || '—'}</div>
         </div>
       `).join('');
     }
 
-    function removeFromComparison(index) { comparisonMaterials.splice(index, 1); updateComparisonList(); }
-    function clearComparison() { comparisonMaterials = []; updateComparisonList(); }
-
-    // ===== ERROR =====
-    function showError(message) {
-      const inCenter = !document.getElementById('centerView').classList.contains('hidden');
-      if (inCenter) {
-        alert(message);
-      } else {
-        const el = document.getElementById('errorState');
-        document.getElementById('errorMessage').textContent = message;
-        el.classList.remove('hidden');
-        setTimeout(() => el.classList.add('hidden'), 6000);
-      }
+    // ── Bohr model image ──────────────────────────────────────────────
+    const bohrImg = document.getElementById('bohrModelImg');
+    if (bohrImg) {
+      bohrImg.src = d.bohrModelImg
+        || `https://placehold.co/300x280/080c14/f5a623?text=Bohr+Model&font=raleway`;
+      document.getElementById('bohrModelCaption').textContent =
+        `${d.name.toUpperCase()} · ELECTRON CONFIG: ${d.electronConfig || '—'}`;
+      document.getElementById('bohrSection').classList.remove('hidden');
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      console.log('MatProp Real-Time initialized');
+    // ── Property cards ────────────────────────────────────────────────
+    const grid = document.getElementById('propertiesGrid');
+    grid.innerHTML = '';
+    d.properties.forEach(p => grid.appendChild(createPropertyCard(p)));
+
+    // ── Demo banner ───────────────────────────────────────────────────
+    const demoBanner = document.getElementById('demoBanner');
+    d._demo ? demoBanner.classList.remove('hidden') : demoBanner.classList.add('hidden');
+
+    // ── Show container + animate bars ────────────────────────────────
+    const container = document.getElementById('resultsContainer');
+    container.classList.remove('hidden');
+    container.classList.add('fade-in');
+    requestAnimationFrame(() => {
+      document.querySelectorAll('.prop-bar-fill').forEach(bar => {
+        setTimeout(() => { bar.style.width = bar.dataset.pct + '%'; }, 120);
+      });
     });
+  }
+
+  // ════════════════════════════════════════════════════════════════════
+  //  PROPERTY CARD BUILDER
+  //  Reads: prop.name, prop.icon, prop.color, prop.value, prop.unit,
+  //         prop.source, prop.sourceTitle
+  // ════════════════════════════════════════════════════════════════════
+  function createPropertyCard(prop) {
+    const card = document.createElement('div');
+    const borders = { blue:'border-blue-500', red:'border-red-500', orange:'border-orange-500', green:'border-green-500', purple:'border-purple-500' };
+    const hasData  = prop.value && prop.value !== '—';
+
+    let barPct = 0;
+    if (hasData) {
+      const maxVal = BAR_MAX[prop.name] || 1000;
+      const raw    = parseFloat(String(prop.value).replace(/[^0-9.]/g, ''));
+      if (!isNaN(raw)) barPct = Math.min(Math.round((raw / maxVal) * 100), 100);
+    }
+
+    card.className = `prop-card rounded-lg p-6 border-l-4 ${borders[prop.color] || 'border-gray-500'} border border-gray-600`;
+    card.style.background = '#1a2a3f';
+    card.innerHTML = `
+      <div style="font-size:2rem;margin-bottom:.5rem">${prop.icon}</div>
+      <div style="font-family:var(--mono);font-size:.82rem;letter-spacing:.15em;color:#93c5fd;text-transform:uppercase;margin-bottom:.5rem;font-weight:600">${prop.name}</div>
+      <div style="font-family:var(--display);font-size:1.75rem;font-weight:900;line-height:1.1;margin-bottom:.25rem">
+        ${hasData
+          ? `<span style="color:#ffffff">${prop.value}</span>
+             <span style="font-size:1rem;color:#7dd3fc;font-family:var(--mono);font-weight:400"> ${prop.unit}</span>`
+          : `<span style="color:#94a3b8;font-size:1rem;font-family:var(--mono)">—</span>`}
+      </div>
+      <div class="prop-bar-track">
+        <div class="prop-bar-fill" data-pct="${barPct}" style="width:0%"></div>
+      </div>
+      ${prop.source ? `
+        <a href="${prop.source}" target="_blank" style="font-family:var(--mono);font-size:.72rem;color:#60a5fa;display:flex;align-items:center;gap:4px;margin-top:.75rem;text-decoration:none">📎 ${prop.sourceTitle || 'View Source'}</a>
+      ` : ''}
+    `;
+    return card;
+  }
+
+ 
+  //  COMPARISON SIDEBAR
+ 
+  function addToComparison() {
+    if (!currentMaterial) return;
+    if (comparisonMaterials.some(m => m.name === currentMaterial.name)) {
+      showError('Material already in comparison list'); return;
+    }
+    comparisonMaterials.push({ ...currentMaterial });
+    updateComparisonList();
+  }
+
+  function updateComparisonList() {
+    const list = document.getElementById('comparisonList');
+    if (!comparisonMaterials.length) {
+      list.innerHTML = '<p style="font-family:var(--mono);font-size:.72rem;color:#3e6a9e">No materials added yet</p>';
+      return;
+    }
+    list.innerHTML = comparisonMaterials.map((mat, idx) => `
+      <div class="bg-gray-700 rounded-lg p-4 relative border border-gray-600">
+        <button onclick="removeFromComparison(${idx})" class="absolute top-2 right-2 text-gray-400 hover:text-red-400" style="font-family:var(--mono);font-size:.8rem">✕</button>
+        <h4 class="font-bold pr-6 mb-2" style="font-family:var(--display);font-size:.8rem;letter-spacing:.05em;color:#e0f2fe">${mat.name}</h4>
+        ${mat.properties.map(p => {
+          const ok = p.value && p.value !== '—';
+          return `<div class="mb-1" style="font-family:var(--mono);font-size:.72rem;color:#a8c8f0">
+            ${p.icon} <span style="font-weight:700">${p.name}:</span>
+            <span style="color:${ok ? '#fff' : '#3e6a9e'}">${ok ? `${p.value} ${p.unit}` : '—'}</span>
+          </div>`;
+        }).join('')}
+      </div>
+    `).join('');
+  }
+
+  function removeFromComparison(index) { comparisonMaterials.splice(index, 1); updateComparisonList(); }
+  function clearComparison()           { comparisonMaterials = []; updateComparisonList(); }
+
+  // ════════════════════════════════════════════════════════════════════
+  //  ERROR BANNER
+  // ════════════════════════════════════════════════════════════════════
+  function showError(message) {
+    const inCenter = !document.getElementById('centerView').classList.contains('hidden');
+    if (inCenter) {
+      alert(message);
+    } else {
+      const el = document.getElementById('errorState');
+      document.getElementById('errorMessage').textContent = message;
+      el.classList.remove('hidden');
+      setTimeout(() => el.classList.add('hidden'), 6000);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => console.log('MatProp Real-Time initialized'));
   </script>
+
 </body>
 </html>
