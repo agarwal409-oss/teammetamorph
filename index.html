@@ -1852,7 +1852,7 @@ setInterval(() => {
         canvas.height = window.innerHeight;
         
         let particles = [];
-        const particleCount = 80;
+        const particleCount = 40;
         const connectionDistance = 110;
         let mouse = { x: null, y: null, radius: 150 };
         
@@ -1927,10 +1927,10 @@ update() {
                 ctx.fill();
                 
                 // Glow effect
-                ctx.shadowBlur = 10;
-                ctx.shadowColor = this.color;
-                ctx.fill();
-                ctx.shadowBlur = 0;
+                // ctx.shadowBlur = 10;
+                // ctx.shadowColor = this.color;
+                // ctx.fill();
+                // ctx.shadowBlur = 0;
             }
         }
         
@@ -1952,18 +1952,19 @@ update() {
                         ctx.beginPath();
                         
                         // Create gradient for connection line
-                        const gradient = ctx.createLinearGradient(
-                            particles[i].x, particles[i].y,
-                            particles[j].x, particles[j].y
-                        );
-                        gradient.addColorStop(0, `rgba(0, 245, 255, ${opacity * 0.5})`);
-                        gradient.addColorStop(1, `rgba(0, 212, 255, ${opacity * 0.5})`);
+                        // const gradient = ctx.createLinearGradient(
+                        //     particles[i].x, particles[i].y,
+                        //     particles[j].x, particles[j].y
+                        // );
+                        // gradient.addColorStop(0, `rgba(0, 245, 255, ${opacity * 0.5})`);
+                        // gradient.addColorStop(1, `rgba(0, 212, 255, ${opacity * 0.5})`);
                         
-                        ctx.strokeStyle = gradient;
-                        ctx.lineWidth = 1;
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.stroke();
+                        // ctx.strokeStyle = gradient;
+                        // ctx.lineWidth = 1;
+                        // ctx.moveTo(particles[i].x, particles[i].y);
+                        // ctx.lineTo(particles[j].x, particles[j].y);
+                        // ctx.stroke();
+                        ctx.strokeStyle = `rgba(0, 245, 255, ${opacity * 0.5})`;
                     }
                 }
             }
