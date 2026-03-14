@@ -350,7 +350,7 @@
         }
         
         /* Scanning Line Effect - Brighter */
-        /* .scan-line {
+        /* /* .scan-line {
             position: fixed;
             top: 0;
             left: 0;
@@ -362,7 +362,7 @@
             pointer-events: none;
             box-shadow: 0 0 10px rgba(0, 245, 255, 0.8);
         } */
-        
+         
         /* @keyframes scan {
             0% {
                 top: 0%;
@@ -864,8 +864,12 @@
                         <div class="text-center">
                             <h4 class="text-xl font-bold heading-font gradient-text mb-1">ARJUN DHANIA</h4>
                             <p class="text-slate-400 text-sm uppercase">CLUB COORDINATOR</p>
- <p class="text-cyan-400/70 text-xs italic"></p>
-                              
+
+                              <!-- <div class="w-10 h-px bg-cyan-500/40 mx-auto mb-2"></div>
+     -->
+    <!-- Motto -->
+                   <p class="text-cyan-400/70 text-xs italic"></p>
+                           <!-- </div>  -->
                         </div>
                     </div>
                 </div>
@@ -892,7 +896,6 @@
                         <div class="text-center">
                             <h4 class="text-xl font-bold heading-font gradient-text mb-1">ARYAN</h4>
                             <p class="text-slate-400 text-sm uppercase">CLUB COORDINATOR</p>
-                             <p class="text-cyan-400/70 text-xs italic"></p>
                         </div>
                     </div>
                 </div>
@@ -918,7 +921,6 @@
                         <div class="text-center">
                             <h4 class="text-xl font-bold heading-font gradient-text mb-1">Tanishq Parashar</h4>
                             <p class="text-slate-400 text-sm uppercase">COORDINATOR</p>
-                             <p class="text-cyan-400/70 text-xs italic"></p>
                         </div>
                     </div>
                 </div>
@@ -940,7 +942,6 @@
                         <div class="text-center">
                             <h4 class="text-xl font-bold heading-font gradient-text mb-1">Sareha</h4>
                             <p class="text-slate-400 text-sm uppercase">COORDINATOR</p>
-                             <p class="text-cyan-400/70 text-xs italic"></p>
                         </div>
                     </div>
                 </div>
@@ -1589,17 +1590,47 @@
     <div class="absolute inset-0" style="background: radial-gradient(circle at 50% 50%, rgba(0, 245, 255, 0.4) 0%, transparent 50%);"></div>
 
     <div class="max-w-6xl mx-auto relative z-10">
-        <div class="glass-card rounded-2xl p-8 md:p-12 hover-lift text-center">
-            
-            <h3 class="text-3xl font-bold mb-4 heading-font">
-                <span class="gradient-text glow-text">Blogs</span>
-            </h3>
-
-            <p class="text-slate-400 text-lg">Coming Soon</p>
-
-        </div>
+        <h3 class="text-3xl font-bold mb-12 text-center heading-font">
+            <span class="gradient-text glow-text">Blogs</span>
+        </h3>
+        <div id="blog-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </div>
 </section>
+
+<!-- ── BLOG MODAL ───────────────────────────────────────── -->
+<div id="blog-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <!-- Backdrop -->
+    <div id="modal-backdrop" class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+
+    <!-- Modal Box -->
+    <div class="relative glass-card rounded-3xl max-w-2xl w-full max-h-[85vh] overflow-y-auto p-8 md:p-10 z-10"
+         style="border: 1px solid rgba(0,245,255,0.3); box-shadow: 0 0 40px rgba(0,245,255,0.1);">
+
+        <!-- Close Button -->
+        <button id="modal-close"
+            class="absolute top-4 right-4 w-9 h-9 rounded-full flex items-center justify-center transition text-slate-400 hover:text-cyan-400"
+            style="background: rgba(0,0,0,0.6); border: 1px solid rgba(0,245,255,0.2);">
+            ✕
+        </button>
+
+        <!-- Cover Image -->
+        <img id="modal-img" src="" alt="" class="w-full h-52 object-cover rounded-2xl mb-6">
+
+        <!-- Meta -->
+        <div class="flex items-center gap-3 mb-4 flex-wrap">
+            <span id="modal-tag" class="text-xs px-3 py-1 rounded-full text-cyan-400"
+                  style="background: rgba(0,245,255,0.08); border: 1px solid rgba(0,245,255,0.25);"></span>
+            <span id="modal-date" class="text-xs text-slate-500"></span>
+            <span id="modal-author" class="text-xs text-slate-500"></span>
+        </div>
+
+        <!-- Title -->
+        <h2 id="modal-title" class="text-2xl font-bold heading-font gradient-text mb-4"></h2>
+
+        <!-- Full Content -->
+        <div id="modal-content" class="text-slate-400 text-sm leading-relaxed space-y-4"></div>
+    </div>
+</div>
         <!-- Contact Section -->
         <section id="contact" class="py-20 px-4">
             <div class="max-w-4xl mx-auto">
@@ -1672,7 +1703,7 @@
                             </a>
                         </div>
                         <p class="text-slate-400 text-sm mt-4">
-                            metamorph@nith.ac.in
+                            <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="aac7cfdecbc7c5d8dac2eac4c3dec284cbc984c3c4">[email&#160;protected]</a>
                         </p>
                     </div>
                 </div>
@@ -1684,7 +1715,7 @@
         </footer>
     </div>
     
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // Initialize Lucide Icons
         lucide.createIcons();
         
@@ -2027,6 +2058,122 @@ const swiper = new Swiper(".teamSwiper", {
     },
 });
 
+// ═══════════════════════════════════════════════════════
+//   BLOG DATA — Add / edit your blogs here
+// ═══════════════════════════════════════════════════════
+const blogs = [
+    {
+        title: "Getting Started with AI",
+        tag: "Artificial Intelligence",
+        date: "June 10, 2025",
+        author: "Arjun Dhania",
+        image: "photos/blog1.jpg",
+        excerpt: "A beginner's guide to understanding how AI is shaping our future.",
+        content: `
+            <p>Artificial Intelligence is no longer science fiction — it is very much part of our daily lives.</p>
+            <p>In this blog we explore the fundamentals of AI, machine learning, and how you can get started learning these skills today.</p>
+            <p>From neural networks to natural language processing, the field is vast and exciting. We'll break it all down in simple terms.</p>
+        `
+    },
+
+{
+        title: "Web Dev in 2025",
+        tag: "Web Development",
+        date: "May 28, 2025",
+        author: "Riya Sharma",
+        image: "photos/blog2.jpg",
+        excerpt: "What frameworks and tools dominate the modern web development landscape.",
+        content: `
+            <p>The web development ecosystem has evolved rapidly. In 2025, tools like Astro, Svelte, and edge computing are front and center.</p>
+            <p>We break down what's trending, what's fading, and what every developer should have in their toolkit this year.</p>
+        `
+    },
+    
+
+
+
+    {
+        title: "Web Dev in 2025",
+        tag: "Web Development",
+        date: "May 28, 2025",
+        author: "Riya Sharma",
+        image: "photos/blog2.jpg",
+        excerpt: "What frameworks and tools dominate the modern web development landscape.",
+        content: `
+            <p>The web development ecosystem has evolved rapidly. In 2025, tools like Astro, Svelte, and edge computing are front and center.</p>
+            <p>We break down what's trending, what's fading, and what every developer should have in their toolkit this year.</p>
+        `
+    },
+    {
+        title: "Open Source Culture",
+        tag: "Community",
+        date: "May 10, 2025",
+        author: "Vikram Singh",
+        // image: "photos/blog3.jpg",
+        excerpt: "Why contributing to open source is the best career move you can make.",
+        content: `
+            <p>Open source isn't just about free software — it's a movement that drives innovation, builds careers, and creates community.</p>
+            <p>Learn how to find projects to contribute to, how to write your first pull request, and why maintainers love new contributors.</p>
+        `
+    }
+];
+// ═══════════════════════════════════════════════════════
+
+// ── Render Blog Cards ──────────────────────────────────
+const blogGrid = document.getElementById('blog-grid');
+
+blogs.forEach((blog, i) => {
+    const card = document.createElement('div');
+    card.className = 'glass-card rounded-3xl overflow-hidden hover-lift group cursor-pointer';
+    card.style.cssText = 'border: 1px solid rgba(0,245,255,0.2); transition: all 0.3s ease;';
+    card.innerHTML = `
+       <div class="p-5">
+    <span class="inline-block text-xs px-3 py-1 rounded-full text-cyan-300 mb-3"
+          style="background: rgba(0,245,255,0.15); border: 1px solid rgba(0,245,255,0.35);">
+        ${blog.tag}
+    </span>
+      
+            <p class="text-slate-500 text-xs mb-2">${blog.date} · ${blog.author}</p>
+            <h4 class="text-lg font-bold heading-font gradient-text mb-2">${blog.title}</h4>
+            <p class="text-slate-400 text-sm leading-relaxed mb-4">${blog.excerpt}</p>
+            <span class="text-cyan-400 text-xs font-medium flex items-center gap-1 group-hover:gap-2 transition-all">
+                Read More <span>→</span>
+            </span>
+        </div>
+    `;
+    card.addEventListener('click', () => openBlogModal(i));
+    blogGrid.appendChild(card);
+});
+
+// ── Modal Logic ────────────────────────────────────────
+const blogModal    = document.getElementById('blog-modal');
+const blogBackdrop = document.getElementById('modal-backdrop');
+const blogClose    = document.getElementById('modal-close');
+
+function openBlogModal(i) {
+    const b = blogs[i];
+    document.getElementById('modal-img').src              = b.image;
+    document.getElementById('modal-img').alt              = b.title;
+    document.getElementById('modal-tag').textContent      = b.tag;
+    document.getElementById('modal-date').textContent     = b.date;
+    document.getElementById('modal-author').textContent   = '✍ ' + b.author;
+    document.getElementById('modal-title').textContent    = b.title;
+    document.getElementById('modal-content').innerHTML    = b.content;
+    blogModal.classList.remove('hidden');
+    blogModal.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeBlogModal() {
+    blogModal.classList.add('hidden');
+    blogModal.classList.remove('flex');
+    document.body.style.overflow = '';
+}
+
+blogClose.addEventListener('click', closeBlogModal);
+blogBackdrop.addEventListener('click', closeBlogModal);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeBlogModal(); });
+
 function initiateMaterialScan() {
     const btnText = document.getElementById('scan-text');
     const container = document.querySelector('#material-lab .glass-card');
@@ -2044,12 +2191,7 @@ function initiateMaterialScan() {
         setTimeout(() => {
             btnText.innerText = "INITIATE QUANTUM SCAN";
             container.classList.remove('scanning-active');
-        }, 1000);
-    }, 1500); // 1.5 second "scanning" delay for effect
+        }, 3000);
+    }, 2000);
 }
-
     </script>
-</body>
-</html>
-
-
